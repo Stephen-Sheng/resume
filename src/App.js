@@ -1,25 +1,27 @@
-import logo from './logo.svg';
 import './App.css';
+import { RequestProvider } from 'react-request-hook';
+import { axiosInstance } from './axios'
+import { NotFoundBoundary, Router, View } from 'react-navi';
+import { routes } from './route'
+import { UserContext } from './context'
+import { useReducer } from 'react';
+import { userReducer } from './reducer';
 
 function App() {
+
+  const [user, userDispatch] = useReducer(userReducer, null)
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <RequestProvider value={axiosInstance}>
+      <UserContext.Provider value={[user, userDispatch]}>
+        <Router routes={routes}>
+          <NotFoundBoundary render={() => <h1><span style={{ color: 'red' }}>Error:404 Not Found!</span></h1>}>
+            <View />
+          </NotFoundBoundary>
+        </Router>
+      </UserContext.Provider>
+    </RequestProvider>
+  )
 }
 
 export default App;
