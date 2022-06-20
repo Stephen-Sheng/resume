@@ -1,5 +1,3 @@
 import React from "react"
 
-export const UserContext = React.createContext({
-    username: 'Yutong'
-})
+export const UserContext = React.createContext({user:'', userDispatch:()=>{}})

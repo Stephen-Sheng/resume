@@ -51,7 +51,8 @@ export default function Home() {
                 className="my-player"
                 fluid={false}
                 autoPlay={true}
-                src="https://files.wondercv.com/%E9%A6%96%E9%A1%B5%E8%A7%86%E9%A2%91_v3.ogg"
+                preload="auto"
+                src="https://files.wondercv.com/%E9%A6%96%E9%A1%B5%E8%A7%86%E9%A2%91_v3.mp4"
             >
                 <ControlBar disableCompletely={true} className="my-class" />
             </Player>

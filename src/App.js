@@ -9,11 +9,12 @@ import { userReducer } from './reducer';
 
 function App() {
 
-  const [user, userDispatch] = useReducer(userReducer, null)
+  // noinspection JSCheckFunctionSignatures
+  const [user, userDispatch] = useReducer(userReducer,'')
 
   return (
     <RequestProvider value={axiosInstance}>
-      <UserContext.Provider value={[user, userDispatch]}>
+      <UserContext.Provider value={{user,userDispatch}}>
         <Router routes={routes}>
           <NotFoundBoundary render={() => <h1><span style={{ color: 'red' }}>Error:404 Not Found!</span></h1>}>
             <View />

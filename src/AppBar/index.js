@@ -12,7 +12,7 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
-import { Link } from 'react-navi';
+import { Link as NaviLink, useNavigation } from 'react-navi';
 
 const pages = ['Resume templates', 'Jobs at Leading Companies', 'Job Hunting Tips'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
@@ -20,6 +20,7 @@ const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 const ResponsiveAppBar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const navigation = useNavigation()
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -33,12 +34,17 @@ const ResponsiveAppBar = () => {
     setAnchorElNav(null);
   };
 
+  const handleNavi = () => {
+    navigation.navigate("/signin")
+    console.log("111");
+  }
+
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
 
   return (
-    <AppBar position="static" style={{backgroundColor:"black"}}>
+    <AppBar position="static" style={{ backgroundColor: "black" }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
@@ -90,8 +96,10 @@ const ResponsiveAppBar = () => {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center"><Link href="/signin">{page}</Link></Typography>
+                <MenuItem key={page} onClick={handleCloseNavMenu} >
+                  <NaviLink href="/">
+                    <Typography textAlign="center" style={{ marginRight: "20%" }}>{page}</Typography>
+                  </NaviLink>
                 </MenuItem>
               ))}
             </Menu>
@@ -119,7 +127,8 @@ const ResponsiveAppBar = () => {
             {pages.map((page) => (
               <Button
                 key={page}
-                onClick={handleCloseNavMenu}
+                // onClick={handleCloseNavMenu}
+                onClick={handleNavi}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
                 {page}
@@ -132,7 +141,7 @@ const ResponsiveAppBar = () => {
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
               </IconButton>
-            </Tooltip> 
+            </Tooltip>
             <Menu
               sx={{ mt: '45px' }}
               id="menu-appbar"
