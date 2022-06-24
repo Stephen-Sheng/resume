@@ -11,8 +11,16 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useNavigation } from 'react-navi'
+import {createTheme, ThemeProvider} from '@mui/material/styles';
+import {useNavigation, Link as NavLink} from 'react-navi'
+import {useRequest} from "react-request-hook";
+import {useInput} from "react-hookedup";
+import {useContext, useState} from "react";
+import {UserContext} from "../context";
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
+import Snackbar from '@mui/material/Snackbar';
+
 
 function Copyright(props) {
     return (
@@ -30,23 +38,50 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignInSide() {
-
+    const email = useInput("")
+    const password = useInput("")
     let navigation = useNavigation()
+    const [loginErr, setLoginErr] = useState(false)
+    const [open, setOpen] = useState(false)
+    const {user,userDispatch} = useContext(UserContext)
+    const [, createLoginRequest] = useRequest((email, password) => ({
+        url: '/login',
+        method: 'post',
+        data: {email, password}
+    }));
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
-        });
-        navigation.navigate('/')
+        const {ready} = createLoginRequest(email.value, password.value);
+        try {
+            const data = await ready()
+            if (data.status === 200) {
+                userDispatch({type: "LOGIN", username: data.data.username, email: data.data.email, id: data.data.id})
+                setOpen(true)
+                await navigation.navigate("/")
+            } else {
+                setLoginErr(true);
+            }
+        } catch (e) {
+            console.log("e")
+        }
+
+        // navigation.navigate('/')
     };
 
     return (
         <ThemeProvider theme={theme}>
-            <Grid container component="main" sx={{ height: '100vh' }}>
-                <CssBaseline />
+            <Snackbar
+                anchorOrigin={{vertical:"top",horizontal:"center"}}
+                open={open}
+                autoHideDuration={6000}
+            >
+                <Alert severity="success" sx={{ width: '100%' }}>
+                    Hello, {user.username}
+                </Alert>
+            </Snackbar>
+            <Grid container component="main" sx={{height: '100vh'}}>
+                <CssBaseline/>
                 <Grid
                     item
                     xs={false}
@@ -71,14 +106,19 @@ export default function SignInSide() {
                             alignItems: 'center',
                         }}
                     >
-                        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-                            <LockOutlinedIcon />
+                        <Avatar sx={{m: 1, bgcolor: 'secondary.main'}}>
+                            <LockOutlinedIcon/>
                         </Avatar>
                         <Typography component="h1" variant="h5">
                             Sign in
                         </Typography>
-                        <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+                        <Box component="form" onSubmit={handleSubmit} sx={{mt: 1}}>
+                            {loginErr && <Alert severity="error">
+                                <AlertTitle>Login failed</AlertTitle>
+                                Invalid email or password — <strong>check it out!</strong>
+                            </Alert>}
                             <TextField
+                                {...email.bindToInput}
                                 margin="normal"
                                 required
                                 fullWidth
@@ -89,6 +129,7 @@ export default function SignInSide() {
                                 autoFocus
                             />
                             <TextField
+                                {...password.bindToInput}
                                 margin="normal"
                                 required
                                 fullWidth
@@ -99,30 +140,30 @@ export default function SignInSide() {
                                 autoComplete="current-password"
                             />
                             <FormControlLabel
-                                control={<Checkbox value="remember" color="primary" />}
+                                control={<Checkbox value="remember" color="primary"/>}
                                 label="Remember me"
                             />
                             <Button
                                 type="submit"
                                 fullWidth
                                 variant="contained"
-                                sx={{ mt: 3, mb: 2 }}
+                                sx={{mt: 3, mb: 2}}
                             >
                                 Sign In
                             </Button>
                             <Grid container>
                                 <Grid item xs>
-                                    <Link href="#" variant="body2">
+                                    <NavLink href="/sign-up">
                                         Forgot password?
-                                    </Link>
+                                    </NavLink>
                                 </Grid>
                                 <Grid item>
-                                    <Link href="#" variant="body2">
-                                        {"Don't have an account? Sign Up"}
-                                    </Link>
+                                    <NavLink href="/sign-up">
+                                        Don't have an account? Sign Up
+                                    </NavLink>
                                 </Grid>
                             </Grid>
-                            <Copyright sx={{ mt: 5 }} />
+                            <Copyright sx={{mt: 5}}/>
                         </Box>
                     </Box>
                 </Grid>
