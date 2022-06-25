@@ -44,7 +44,7 @@ export default function Home() {
                 <Grid item xs={2} sm={4} md={4}>
                 </Grid>
                 <Grid item xs={2} sm={4} md={4} style={{ textAlign: "center" }}>
-                    <Button variant="contained" style={{borderRadius:"40px", background:"#ff3d3d", height:"150%", fontWeight:"550"}}>Generate a free professional CV</Button>
+                    <Button variant="contained" style={{borderRadius:"40px", backgroundImage:"linearGradient(90deg,#ff813a,#ff3d3d)", height:"150%", fontWeight:"550"}}>Generate a free professional CV</Button>
                 </Grid>
             </Grid>
             <Player

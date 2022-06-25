@@ -73,7 +73,7 @@ const ResponsiveAppBar = () => {
             sx: {
                 bgcolor: stringToColor(name),
             },
-            children: `${name.split(' ')[0][0]}`,
+            children: `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`,
         };
     }
 
@@ -177,9 +177,9 @@ const ResponsiveAppBar = () => {
                         <Box sx={{flexGrow: 0}}>
                             <Tooltip title="Open settings">
                                 <>
-                                <IconButton onClick={handleOpenUserMenu} sx={{p: 0}} style={{color:"white"}}>
+                                <IconButton onClick={handleOpenUserMenu} sx={{p: 0}} style={{color:"white", fontSize:"20px"}}>
                                     <Avatar {...stringAvatar(user.username)} style={{marginRight:"10%"}} />
-                                    {user.username}
+                                    {user.username.split(" ")[0]}
                                 </IconButton>
                                 </>
                             </Tooltip>

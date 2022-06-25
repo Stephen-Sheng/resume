@@ -3,8 +3,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -16,11 +14,9 @@ import {useNavigation, Link as NavLink} from 'react-navi'
 import {useRequest} from "react-request-hook";
 import {useInput} from "react-hookedup";
 import {useContext, useState} from "react";
-import {UserContext} from "../context";
+import {SnackContext} from "../context";
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
-import Snackbar from '@mui/material/Snackbar';
-
 function Copyright(props) {
     return (
         <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -37,14 +33,36 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignUp() {
-    // const email = useInput("")
-    // const password = useInput("")
-    // const firstName = useInput("")
-    // const lastName = useInput("")
-    const handleSubmit = (event) => {
+    const email = useInput("")
+    const password = useInput("")
+    const firstName = useInput("")
+    const lastName = useInput("")
+    const navigation = useNavigation()
+    const {setSnackOpen, setSnackMsg} = useContext(SnackContext)
+    const [regErr, setRegErr] = useState(false)
+    const [,createRegRequest] = useRequest((username,password,email)=>({
+        url:'/register',
+        method:'POST',
+        data:{username,password,email}
+    }))
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        data.forEach((value,key)=>console.log(key))
+        let username = `${firstName.value} ${lastName.value}`
+        console.log(username)
+        const {ready} = createRegRequest(username, password.value, email.value);
+        try{
+            const data = await ready()
+            console.log(data)
+            if (data.status === 200) {
+                await navigation.navigate("/")
+                setSnackMsg("Registration Success!")
+                setSnackOpen(true)
+            } else {
+                setRegErr(true)
+            }
+        } catch (e) {
+            console.log("e")
+        }
     };
 
     return (
@@ -66,9 +84,14 @@ export default function SignUp() {
                         Sign up
                     </Typography>
                     <Box component="form" onSubmit={handleSubmit} sx={{mt: 3}}>
+                        {regErr && <Alert severity="error" style={{marginBottom:'15px'}}>
+                            <AlertTitle>Sign up failed</AlertTitle>
+                            This email has been registered!
+                        </Alert>}
                         <Grid container spacing={2}>
                             <Grid item xs={12} sm={6}>
                                 <TextField
+                                    {...firstName.bindToInput}
                                     autoComplete="given-name"
                                     name="firstName"
                                     required
@@ -80,6 +103,7 @@ export default function SignUp() {
                             </Grid>
                             <Grid item xs={12} sm={6}>
                                 <TextField
+                                    {...lastName.bindToInput}
                                     required
                                     fullWidth
                                     id="lastName"
@@ -90,6 +114,7 @@ export default function SignUp() {
                             </Grid>
                             <Grid item xs={12}>
                                 <TextField
+                                    {...email.bindToInput}
                                     required
                                     fullWidth
                                     id="email"
@@ -100,6 +125,7 @@ export default function SignUp() {
                             </Grid>
                             <Grid item xs={12}>
                                 <TextField
+                                    {...password.bindToInput}
                                     required
                                     fullWidth
                                     name="password"
@@ -109,12 +135,12 @@ export default function SignUp() {
                                     autoComplete="new-password"
                                 />
                             </Grid>
-                            <Grid item xs={12}>
-                                <FormControlLabel
-                                    control={<Checkbox value="allowExtraEmails" color="primary"/>}
-                                    label="I want to receive inspiration, marketing promotions and updates via email."
-                                />
-                            </Grid>
+                            {/*<Grid item xs={12}>*/}
+                            {/*    <FormControlLabel*/}
+                            {/*        control={<Checkbox value="allowExtraEmails" color="primary"/>}*/}
+                            {/*        label="I want to receive inspiration, marketing promotions and updates via email."*/}
+                            {/*    />*/}
+                            {/*</Grid>*/}
                         </Grid>
                         <Button
                             type="submit"

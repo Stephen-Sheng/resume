@@ -16,10 +16,9 @@ import {useNavigation, Link as NavLink} from 'react-navi'
 import {useRequest} from "react-request-hook";
 import {useInput} from "react-hookedup";
 import {useContext, useState} from "react";
-import {UserContext} from "../context";
+import {SnackContext, UserContext} from "../context";
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
-import Snackbar from '@mui/material/Snackbar';
 
 
 function Copyright(props) {
@@ -41,9 +40,9 @@ export default function SignInSide() {
     const email = useInput("")
     const password = useInput("")
     let navigation = useNavigation()
+    const {setSnackOpen, setSnackMsg} = useContext(SnackContext)
     const [loginErr, setLoginErr] = useState(false)
-    const [open, setOpen] = useState(false)
-    const {user,userDispatch} = useContext(UserContext)
+    const {userDispatch} = useContext(UserContext)
     const [, createLoginRequest] = useRequest((email, password) => ({
         url: '/login',
         method: 'post',
@@ -56,8 +55,9 @@ export default function SignInSide() {
         try {
             const data = await ready()
             if (data.status === 200) {
+                setSnackMsg(`Hello, ${data.data.username.split(" ")[0]}`)
+                setSnackOpen("true")
                 userDispatch({type: "LOGIN", username: data.data.username, email: data.data.email, id: data.data.id})
-                setOpen(true)
                 await navigation.navigate("/")
             } else {
                 setLoginErr(true);
@@ -65,21 +65,10 @@ export default function SignInSide() {
         } catch (e) {
             console.log("e")
         }
-
-        // navigation.navigate('/')
     };
 
     return (
         <ThemeProvider theme={theme}>
-            <Snackbar
-                anchorOrigin={{vertical:"top",horizontal:"center"}}
-                open={open}
-                autoHideDuration={6000}
-            >
-                <Alert severity="success" sx={{ width: '100%' }}>
-                    Hello, {user.username}
-                </Alert>
-            </Snackbar>
             <Grid container component="main" sx={{height: '100vh'}}>
                 <CssBaseline/>
                 <Grid
