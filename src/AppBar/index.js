@@ -16,7 +16,7 @@ import {Link as NaviLink, useNavigation} from 'react-navi';
 import {useContext, useState} from "react";
 import {UserContext} from "../context";
 
-const pages = ['Resume templates', 'Jobs at Leading Companies', 'Job Hunting Tips'];
+// const pages = ['Resume templates', 'Jobs at Leading Companies', 'Job Hunting Tips'];
 // const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 const ResponsiveAppBar = () => {
@@ -35,7 +35,6 @@ const ResponsiveAppBar = () => {
 
     const handleCloseNavMenu = () => {
         setAnchorElNav(null);
-        userDispatch()
     };
 
     const handleNavi = () => {
@@ -43,7 +42,7 @@ const ResponsiveAppBar = () => {
     }
 
     const handleLogout = () => {
-        userDispatch({type:"LOGOUT"})
+        userDispatch({type: "LOGOUT"})
 
 
     };
@@ -72,8 +71,7 @@ const ResponsiveAppBar = () => {
         return {
             sx: {
                 bgcolor: stringToColor(name),
-            },
-            children: `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`,
+            }, children: `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`,
         };
     }
 
@@ -81,16 +79,15 @@ const ResponsiveAppBar = () => {
         setAnchorElUser(null);
     }
 
-    return (
-        <AppBar position="static" style={{backgroundColor: "black"}}>
+    return (<AppBar position="static" style={{backgroundColor: "black"}}>
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
+
                     <AdbIcon sx={{display: {xs: 'none', md: 'flex'}, mr: 1}}/>
                     <Typography
                         variant="h6"
                         noWrap
                         component="a"
-                        href="/"
                         sx={{
                             mr: 2,
                             display: {xs: 'none', md: 'flex'},
@@ -100,11 +97,11 @@ const ResponsiveAppBar = () => {
                             color: 'inherit',
                             textDecoration: 'none',
                         }}
+                        onClick={()=>navigation.navigate('/')}
                     >
                         LOGO
                     </Typography>
-
-                    <Box sx={{flexGrow: 1, display: {xs: 'flex', md: 'none'}}}>
+                    <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
                         <IconButton
                             size="large"
                             aria-label="account of current user"
@@ -113,7 +110,7 @@ const ResponsiveAppBar = () => {
                             onClick={handleOpenNavMenu}
                             color="inherit"
                         >
-                            <MenuIcon/>
+                            <MenuIcon />
                         </IconButton>
                         <Menu
                             id="menu-appbar"
@@ -130,108 +127,112 @@ const ResponsiveAppBar = () => {
                             open={Boolean(anchorElNav)}
                             onClose={handleCloseNavMenu}
                             sx={{
-                                display: {xs: 'block', md: 'none'},
+                                display: { xs: 'block', md: 'none' },
                             }}
                         >
-                            {pages.map((page) => (
-                                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                                    <NaviLink href="/">
-                                        <Typography textAlign="center" style={{marginRight: "20%"}}>{page}</Typography>
-                                    </NaviLink>
-                                </MenuItem>
-                            ))}
+                            {user.id && <MenuItem onClick={handleCloseNavMenu}>
+                                    <NaviLink href={'/cv'}>My Resume</NaviLink>
+                                </MenuItem>}
+                           <MenuItem onClick={handleCloseNavMenu}>
+                                <NaviLink>Resume templates</NaviLink>
+                            </MenuItem>
+                            <MenuItem onClick={handleCloseNavMenu}>
+                                <NaviLink>Jobs at Leading Companies</NaviLink>
+                            </MenuItem>
+                            <MenuItem onClick={handleCloseNavMenu}>
+                               <NaviLink>Job Hunting Tips</NaviLink>
+                            </MenuItem>
+
                         </Menu>
                     </Box>
-                    <AdbIcon sx={{display: {xs: 'flex', md: 'none'}, mr: 1}}/>
-                    <Typography
-                        variant="h5"
-                        noWrap
-                        component="a"
-                        href=""
-                        sx={{
-                            mr: 2,
-                            display: {xs: 'flex', md: 'none'},
-                            flexGrow: 1,
-                            fontFamily: 'monospace',
-                            fontWeight: 700,
-                            letterSpacing: '.3rem',
-                            color: 'inherit',
-                            textDecoration: 'none',
-                        }}
-                    >
-                        LOGO
-                    </Typography>
                     <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}}}>
-                        {pages.map((page) => (
+                        {user.id && <NaviLink href={'/cv'} style={{color:"white", textDecoration:"none"}}>
                             <Button
-                                key={page}
                                 // onClick={handleCloseNavMenu}
-                                onClick={handleNavi}
+                                // onClick={handleNavi}
                                 sx={{my: 2, color: 'white', display: 'block'}}
                             >
-                                {page}
+                                My Resume
                             </Button>
-                        ))}
+                        </NaviLink>}
+                        <NaviLink>
+                            <Button
+                                // onClick={handleCloseNavMenu}
+                                // onClick={handleNavi}
+                                sx={{my: 2, color: 'white', display: 'block'}}
+                            >
+                                Resume templates
+                            </Button>
+                        </NaviLink>
+                        <NaviLink>
+                            <Button
+                                // onClick={handleCloseNavMenu}
+                                // onClick={handleNavi}
+                                sx={{my: 2, color: 'white', display: 'block'}}
+                            >
+                                Jobs at Leading Companies
+                            </Button>
+                        </NaviLink>
+                        <NaviLink>
+                            <Button
+                                // onClick={handleCloseNavMenu}
+                                // onClick={handleNavi}
+                                sx={{my: 2, color: 'white', display: 'block'}}
+                            >
+                                Job Hunting Tips
+                            </Button>
+                        </NaviLink>
                     </Box>
-                    {user.id &&
-                        <Box sx={{flexGrow: 0}}>
-                            <Tooltip title="Open settings">
-                                <>
-                                <IconButton onClick={handleOpenUserMenu} sx={{p: 0}} style={{color:"white", fontSize:"20px"}}>
-                                    <Avatar {...stringAvatar(user.username)} style={{marginRight:"10%"}} />
+                    {user.id && <Box sx={{flexGrow: 0}}>
+                        <Tooltip title="Open settings">
+                            <>
+                                <IconButton onClick={handleOpenUserMenu} sx={{p: 0}}
+                                            style={{color: "white", fontSize: "20px"}}>
+                                    <Avatar {...stringAvatar(user.username)} style={{marginRight: "10%"}}/>
                                     {user.username.split(" ")[0]}
                                 </IconButton>
-                                </>
-                            </Tooltip>
-                            <Menu
-                                sx={{mt: '45px'}}
-                                id="menu-appbar"
-                                anchorEl={anchorElUser}
-                                anchorOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right',
-                                }}
-                                keepMounted
-                                transformOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right',
-                                }}
-                                open={Boolean(anchorElUser)}
-                                onClose={handleCloseUserMenu}
-                            >
-                                {/*{settings.map((setting) => (*/}
-                                    <MenuItem onClick={handleLogout}>
-                                        <Typography textAlign="center">Log out</Typography>
-                                    </MenuItem>
-                                {/*))}*/}
-                            </Menu>
-                        </Box>
-                    }
-                    {!user.id &&
-                        <Box sx={{flexGrow: 0}}>
-                            <Button variant="outlined" style={{
-                                borderRadius: "40px",
-                                height: "150%",
-                                fontWeight: "550",
-                                color: "white",
-                                marginRight: "20px",
-                                border: "1px solid #797b7e"
-                            }} onClick={handleNavi}>Sign in</Button>
-                            <NaviLink href={'/sign-up'} style={{textDecoration:"none"}}>
-                                <Button variant="contained" style={{
-                                    borderRadius: "40px",
-                                    background: "#ff3d3d",
-                                    height: "150%",
-                                    fontWeight: "550"
-                                }}> Register </Button>
-                            </NaviLink>
+                            </>
+                        </Tooltip>
+                        <Menu
+                            sx={{mt: '45px'}}
+                            id="menu-appbar"
+                            anchorEl={anchorElUser}
+                            anchorOrigin={{
+                                vertical: 'top', horizontal: 'right',
+                            }}
+                            keepMounted
+                            transformOrigin={{
+                                vertical: 'top', horizontal: 'right',
+                            }}
+                            open={Boolean(anchorElUser)}
+                            onClose={handleCloseUserMenu}
+                        >
+                            {/*{settings.map((setting) => (*/}
+                            <MenuItem onClick={handleLogout}>
+                                <Typography textAlign="center">Log out</Typography>
+                            </MenuItem>
+                            {/*))}*/}
+                        </Menu>
+                    </Box>}
+                    {!user.id && <Box sx={{flexGrow: 0}}>
+                        <Button variant="outlined" style={{
+                            borderRadius: "40px",
+                            height: "150%",
+                            fontWeight: "550",
+                            color: "white",
+                            marginRight: "20px",
+                            border: "1px solid #797b7e"
+                        }} onClick={handleNavi}>Sign in</Button>
+                        <NaviLink href={'/sign-up'} style={{textDecoration: "none"}}>
+                            <Button variant="contained" style={{
+                                borderRadius: "40px", background: "#ff3d3d", height: "150%", fontWeight: "550"
+                            }}> Register </Button>
+                        </NaviLink>
 
-                        </Box>
-                    }
+                    </Box>}
 
                 </Toolbar>
             </Container>
-        </AppBar>
-    );
+        </AppBar>);
 };
 export default ResponsiveAppBar;
