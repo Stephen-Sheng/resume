@@ -3,7 +3,6 @@ import Home from '../Home'
 import SignInSide from '../LoginPage'
 import SignUp from "../register";
 import MyResumePage from "../MyResumePage";
-import {DownloadLink} from "../ResumeTemplate";
 import ResumeEditor from "../ResumeEditor";
 
 export const routes = mount({
