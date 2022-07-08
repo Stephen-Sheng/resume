@@ -9,6 +9,7 @@ import {useState} from "react";
 import useHover from '@react-hook/hover'
 import Divider from "@mui/material/Divider";
 import InfoTemplate from "./InfoTemplate";
+import SuggestionBar from "./SuggestionBar";
 
 const Item = styled("div")(({theme}) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -21,56 +22,23 @@ const Item = styled("div")(({theme}) => ({
 
 export default function ResumeEditor() {
     const userInfoTarget = React.useRef(null)
+
+    const [resumeName, setResumeName] = useState("");
     const [userName, setUserName] = useState("Name")
     const [phoneNum, setPhoneNum] = useState("")
     const [workLocation, setWorkLocation] = useState("")
     const [email, setEmail] = useState("")
     const isUserInfoHovering = useHover(userInfoTarget, {enterDelay: 0, leaveDelay: 0})
 
-    const [eduInfo, setEduInfo] = useState([{
-        univName: "Beijing University of Posts and Telecommunications",
-        programName: "Telecommunications with Management",
-        degree: "Bachelor",
-        cityName: "Beijing",
-        time: "2017-09 - 2021-06",
-        description: "web Dev"
-    }, {
-        univName: "University of Southampton",
-        programName: "Computer Science",
-        degree: "Master",
-        cityName: "Southampton",
-        time: "2021-09 - 2022-09",
-        description: "web Dev"
-    }])
+    const [eduInfo, setEduInfo] = useState([])
 
-    const [projectInfo, setProjectInfo] = useState([{
-        projectName: "Hua Ti Sunshine WeChat Mini-program",
-        role: "front-end engineer",
-        department: "BUPT final project",
-        city: "Beijing",
-        time: "2021-02 - 2022-06",
-        description: "《华体原力》是一款便于青少年的家长们快速了解子女身体状况与体测数据的微信小程序\n" +
-            "目前实现了“登录”、“察看身体状况”以及“个人中心”和“首页”的编写\n" +
-            "预计可以如期完成其他预期的功能，如：“用户积分”、“404页面”及“推荐阅读”等"
-    }, {
-        projectName: "Hua Ti Sunshine WeChat Mini-program",
-        role: "front-end engineer",
-        department: "BUPT final project",
-        city: "Shanghai",
-        time: "2021-02 - 2022-06",
-        description: "《华体原力》是一款便于青少年的家长们快速了解子女身体状况与体测数据的微信小程序\n" +
-            "目前实现了“登录”、“察看身体状况”以及“个人中心”和“首页”的编写\n" +
-            "预计可以如期完成其他预期的功能，如：“用户积分”、“404页面”及“推荐阅读”等"
-    }])
+    const [projectInfo, setProjectInfo] = useState([])
 
-    const [orgInfo, setOrgInfo] = useState([{
-        orgName: "Volunteer association",
-        role:"Supervisor",
-        department:"Office",
-        time:"2021-02 - 2022-06",
-        city:"Beijing",
-        description:""
-    }])
+    const [orgInfo, setOrgInfo] = useState([])
+
+    const [profSkills, setProfSkills] = useState("")
+
+    const [otherSkill, setOtherSkill] = useState("")
 
     function handleClickName() {
         console.log("clicked")
@@ -92,8 +60,10 @@ export default function ResumeEditor() {
                                 height: 1017,
                             },
                         }}
+                        // style={{maxHeight:1017,overflow:"auto"}}
                     >
-                        <Paper elevation={0}>
+                        <Paper elevation={0} >
+                            <SuggestionBar resumeInfo={{userName, phoneNum, workLocation, email, eduInfo, projectInfo, orgInfo,profSkills, otherSkill, resumeName}}/>
                         </Paper>
                     </Box>
                 </Grid>
@@ -123,13 +93,22 @@ export default function ResumeEditor() {
                                     }}>
                                         {userName}
                                     </Item>
-                                    <Item style={{
-                                        fontWeight: 500,
-                                        fontSize: "12px",
-                                        backgroundColor: isUserInfoHovering ? '#EFEFF0' : 'white'
-                                    }}>
-                                        {phoneNum !== "" || email !== "" || workLocation !== "" ? `${phoneNum} | ${email} | ${workLocation}` : ""}
-                                    </Item>
+                                    {phoneNum.length === 0 & email.length === 0 & workLocation.length === 0 ? <div
+                                            style={{
+                                                fontSize: "12px",
+                                                marginLeft: "50px",
+                                                marginRight: "40px",
+                                                marginBottom: "40px",
+                                                color: "#606060"
+                                            }}>Please enter your basic information</div> :
+                                        <Item style={{
+                                            fontWeight: 500,
+                                            fontSize: "12px",
+                                            backgroundColor: isUserInfoHovering ? '#EFEFF0' : 'white'
+                                        }}>
+                                            {phoneNum !== "" || email !== "" || workLocation !== "" ? `${phoneNum} | ${email} | ${workLocation}` : ""}
+                                        </Item>
+                                    }
                                 </Grid>
                                 <Grid item xs={3}>
                                     <PhotoUpload/>
@@ -151,18 +130,29 @@ export default function ResumeEditor() {
                                     marginBottom: "5px"
                                 }}/>
                             </Grid>
-                            {eduInfo !== [] && eduInfo.map((value, index) => {
-                                return (
-                                    <InfoTemplate key={index} infoObj={{
-                                        topic: value.univName,
-                                        city: value.cityName,
-                                        department: value.degree,
-                                        description: value.description,
-                                        role: value.programName,
-                                        time: value.time
-                                    }}/>
-                                )
-                            })}
+                            {eduInfo.length === 0 ?
+                                <div style={{
+                                    fontSize: "12px",
+                                    marginLeft: "50px",
+                                    marginRight: "40px",
+                                    marginBottom: "40px",
+                                    color: "#606060"
+                                }}>Students are able to show their
+                                    expertise and learning ability in their educational background
+                                </div> : eduInfo.map((value, index) => {
+                                    return (
+                                        <InfoTemplate key={index} infoObj={{
+                                            topic: value.univName,
+                                            city: value.cityName,
+                                            department: value.degree,
+                                            description: value.description,
+                                            role: value.programName,
+                                            time: value.time
+                                        }}/>
+                                    )
+                                })
+
+                            }
 
                             {/*    Project Experience*/}
                             <Grid container spacing={0}>
@@ -181,7 +171,7 @@ export default function ResumeEditor() {
                                     marginBottom: "5px"
                                 }}/>
                             </Grid>
-                            {projectInfo !== [] && projectInfo.map((value, index) => {
+                            {projectInfo.length !== 0 ? projectInfo.map((value, index) => {
                                 return (
                                     <InfoTemplate key={index} infoObj={{
                                         topic: value.projectName,
@@ -192,9 +182,19 @@ export default function ResumeEditor() {
                                         time: value.time
                                     }}/>
                                 )
-                            })}
+                            }) : <div style={{
+                                fontSize: "12px",
+                                marginLeft: "50px",
+                                marginRight: "40px",
+                                marginBottom: "40px",
+                                color: "#606060"
+                            }}>
+                                Interviewers usually look for experience that is relevant to the position being applied
+                                for
+                            </div>
+                            }
 
-                        {/*    Organization Exp part*/}
+                            {/*    Organization Exp part*/}
                             <Grid container spacing={0}>
                                 <Grid item xs={3}><Item style={{
                                     fontWeight: 700,
@@ -211,7 +211,7 @@ export default function ResumeEditor() {
                                     marginBottom: "5px"
                                 }}/>
                             </Grid>
-                            {orgInfo !== [] && orgInfo.map((value, index) => {
+                            {orgInfo.length !== 0 ? orgInfo.map((value, index) => {
                                 return (
                                     <InfoTemplate key={index} infoObj={{
                                         topic: value.orgName,
@@ -222,17 +222,26 @@ export default function ResumeEditor() {
                                         time: value.time
                                     }}/>
                                 )
-                            })}
+                            }) : <div style={{
+                                fontSize: "12px",
+                                marginLeft: "50px",
+                                marginRight: "40px",
+                                marginBottom: "40px",
+                                color: "#606060"
+                            }}>
+                                Can reflect students' strengths beyond academic ability
+                            </div>
+                            }
 
                             {/*    Professional Skill Exp part*/}
                             <Grid container spacing={0}>
-                                <Grid item xs={3}><Item style={{
+                                <Grid item xs={8}><Item style={{
                                     fontWeight: 700,
                                     fontSize: "17px",
                                     paddingBottom: "0px",
                                     textAlign: "left",
                                     marginLeft: "40px"
-                                }}>Skills</Item></Grid>
+                                }}>Professional Skills</Item></Grid>
                                 <Divider style={{
                                     width: '85%',
                                     borderColor: "black",
@@ -241,6 +250,17 @@ export default function ResumeEditor() {
                                     marginBottom: "5px"
                                 }}/>
                             </Grid>
+                            {profSkills.length === 0 ?
+                                <div style={{
+                                    fontSize: "12px",
+                                    marginLeft: "50px",
+                                    marginRight: "40px",
+                                    marginBottom: "40px",
+                                    color: "#606060"
+                                }}>
+                                    A summary of the acquisition of professional skills
+                                </div> : {profSkills}
+                            }
                             {/*    Others part*/}
                             <Grid container spacing={0}>
                                 <Grid item xs={3}><Item style={{
@@ -258,6 +278,17 @@ export default function ResumeEditor() {
                                     marginBottom: "5px"
                                 }}/>
                             </Grid>
+                            {otherSkill.length === 0 ?
+                                <div style={{
+                                    fontSize: "12px",
+                                    marginLeft: "50px",
+                                    marginRight: "40px",
+                                    marginBottom: "40px",
+                                    color: "#606060"
+                                }}>
+                                    Other skills and hobbies
+                                </div> : {otherSkill}
+                            }
                         </Paper>
                     </Box>
 
