@@ -20,11 +20,12 @@ import {DownloadLink} from "../ResumeTemplate";
 // const pages = ['Resume templates', 'Jobs at Leading Companies', 'Job Hunting Tips'];
 // const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
-const ResumeAppBar = () => {
+const ResumeAppBar = (props) => {
 
     const [anchorElNav, setAnchorElNav] = useState(null);
     const [anchorElUser, setAnchorElUser] = useState(null);
     const navigation = useNavigation()
+    const printDocument = props.printDocument
     const {user, userDispatch} = useContext(UserContext);
 
     const handleOpenNavMenu = (event) => {
@@ -97,11 +98,11 @@ const ResumeAppBar = () => {
                         color: 'inherit',
                         textDecoration: 'none',
                     }}
-                    onClick={()=>navigation.navigate('/')}
+                    onClick={() => navigation.navigate('/')}
                 >
                     LOGO
                 </Typography>
-                <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+                <Box sx={{flexGrow: 1, display: {xs: 'flex', md: 'none'}}}>
                     <IconButton
                         size="large"
                         aria-label="account of current user"
@@ -110,7 +111,7 @@ const ResumeAppBar = () => {
                         onClick={handleOpenNavMenu}
                         color="inherit"
                     >
-                        <MenuIcon />
+                        <MenuIcon/>
                     </IconButton>
                     <Menu
                         id="menu-appbar"
@@ -127,15 +128,20 @@ const ResumeAppBar = () => {
                         open={Boolean(anchorElNav)}
                         onClose={handleCloseNavMenu}
                         sx={{
-                            display: { xs: 'block', md: 'none' },
+                            display: {xs: 'block', md: 'none'},
                         }}
                     >
                     </Menu>
                 </Box>
-                {user.id && <Box sx={{flexGrow: 0}} style={{marginLeft:"60rem"}}>
-                    <Button variant="contained" style={{
-                        borderRadius: "40px", background: "#ff3d3d", height: "150%", fontWeight: "550", marginRight:"5em"
-                    }}> <DownloadLink /> </Button>
+                <Button variant="contained" onClick={printDocument} style={{
+                    borderRadius: "40px",
+                    background: "#ff3d3d",
+                    height: "150%",
+                    fontWeight: "550",
+                    marginRight: "5em"
+                }}> Download </Button>
+                {user.id && <Box sx={{flexGrow: 0}} style={{marginLeft: "60rem"}}>
+
                     <Tooltip title="Open settings">
                         <>
                             <IconButton onClick={handleOpenUserMenu} sx={{p: 0}}
@@ -164,7 +170,7 @@ const ResumeAppBar = () => {
                         </MenuItem>
                     </Menu>
                 </Box>}
-                {!user.id && <Box sx={{flexGrow: 0}} style={{marginLeft:"70rem"}}>
+                {!user.id && <Box sx={{flexGrow: 0}} style={{marginLeft: "70rem"}}>
                     <Button variant="outlined" style={{
                         borderRadius: "40px",
                         height: "150%",

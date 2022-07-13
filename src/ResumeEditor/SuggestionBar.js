@@ -75,7 +75,7 @@ export default function SuggestionBar(props) {
     useEffect(() => {
         let count = 0;
         let total = 0;
-        if (userName.length === 4) {
+        if (userName.length === 0) {
             count++
         }
         if (email.length === 0) {
@@ -141,7 +141,7 @@ export default function SuggestionBar(props) {
             </ListItemButton>
             <Collapse in={basicOpen} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding >
-                    {userName.length === 4 && <ListItem text={"Important basic information is missing from your resume, please make sure you fill in your name"} />}
+                    {userName.length === 0 && <ListItem text={"Important basic information is missing from your resume, please make sure you fill in your name"} />}
                     {email.length === 0 && <ListItem text={"Email is an important basic information in the resume, it is recommended to fill in the common email"} />}
                     {phoneNum.length === 0 && <ListItem text={"Phone number is an important basic information in the resume, please pay attention to complete and accurate filling"}/>}
                     {resumeName.length === 0 && <ListItem text={"Note that the name of the resume file is modified according to the position submitted, generally using the format: applied job name_Name"}/>}

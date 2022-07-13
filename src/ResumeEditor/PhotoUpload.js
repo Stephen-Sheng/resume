@@ -1,7 +1,7 @@
 import {LoadingOutlined, PlusOutlined} from '@ant-design/icons';
 import { message, Upload } from 'antd';
 import { useState } from 'react';
-
+import './PhotoUpload.css'
 const getBase64 = (img, callback) => {
     const reader = new FileReader();
     reader.addEventListener('load', () => callback(reader.result));

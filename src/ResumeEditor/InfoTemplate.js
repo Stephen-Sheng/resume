@@ -1,21 +1,25 @@
 import * as React from 'react';
 import {styled} from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
+import parse from 'html-react-parser';
+import 'react-quill/dist/quill.snow.css';
+import useHover from "@react-hook/hover";
+import './PhotoUpload.css'
 
 const Item = styled("div")(({theme}) => ({
-    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
     ...theme.typography.body2,
     padding: theme.spacing(1),
     textAlign: 'center',
-    // color: theme.palette.text.secondary,
     fontFamily: "Arial"
 }));
 
 export default function InfoTemplate(props) {
-    const {topic, time, role, department, city} = props.infoObj
+    const {topic, time, role, department, city, description} = props.infoObj
+    const target = React.useRef(null)
+    const isHovering = useHover(target, {enterDelay: 0, leaveDelay: 0})
     return (
-        <>
-            <Grid container spacing={0} style={{marginBottom: "0px"}}>
+        <div ref={target} style={{backgroundColor: isHovering ? '#EFEFF0' : 'white', cursor:"pointer"}}>
+            <Grid container spacing={0} style={{marginBottom: "0px", backgroundColor:"transparent"}}>
                 <Grid item xs={8}>
                     <Item style={{
                         fontWeight: 700,
@@ -37,7 +41,7 @@ export default function InfoTemplate(props) {
                         paddingTop: "0px",
                         paddingBottom: "0px"
                     }}>
-                        {time}
+                        {time[0].format("YYYY/MM")+ " - "+ time[1].format("YYYY/MM")}
                     </Item>
                 </Grid>
             </Grid>
@@ -73,23 +77,10 @@ export default function InfoTemplate(props) {
                     paddingBottom: "0px",
                     marginRight: "45px",
                 }}>
-                    {/*/!*{description}*!/*/}
-                    {/*<ul style={{paddingLeft: "15px", fontSize: "15px", marginBottom: "0px"}}>*/}
-                    {/*    <li>Huashi Force is a WeChat app that allows parents of teenagers to*/}
-                    {/*        get a quick overview of their children's physical condition and*/}
-                    {/*        test data.*/}
-                    {/*    </li>*/}
-                    {/*    <li>Currently "Login", "Check your health", "Personal Centre" and*/}
-                    {/*        "Home" are available.*/}
-                    {/*    </li>*/}
-                    {/*    <li>It is expected that other expected features such as "user*/}
-                    {/*        points", "404 pages" and "recommended reading" will be completed*/}
-                    {/*        as scheduled*/}
-                    {/*    </li>*/}
-                    {/*</ul>*/}
+                    {parse(description)}
                 </Item>
             </Grid>
-        </>
+        </div>
     )
 }
 

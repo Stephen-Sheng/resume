@@ -1,0 +1,39 @@
+
+.my-input.ant-input:hover{
+    box-shadow: none;
+    border-color:#f64 !important;
+}
+.my-input.ant-input:focus {
+    border-color:#f64 !important;
+    outline: none;
+    box-shadow: none;
+}
+.ant-select-focused .ant-select-selector,
+.ant-select-selector:focus,
+.ant-select-selector:hover,
+.ant-select-selector:active,
+.ant-select-open .ant-select-selector {
+    border-color:#f64 !important;
+    outline: none;
+    box-shadow: none !important;
+}
+
+.ant-picker-focused, .ant-picker:hover{
+    box-shadow: none !important;
+    border-color: #f64 !important;
+}
+.ant-picker-active-bar{
+    background:#f64 !important;
+}
+/*.ant-picker-cell-in-view.ant-picker-cell-today .ant-picker-cell-inner:before{*/
+/*    border-color: #ff6644 !important;*/
+/*}*/
+/*.ant-picker-cell-in-view.ant-picker-cell-range-start .ant-picker-cell-inner{*/
+/*    background:#f64 !important;*/
+
+/*}*/
+/*.ant-picker-cell-range-hover{*/
+/*    background:#f64 !important;*/
+
+/*}*/
+
