@@ -4,8 +4,6 @@ import React, {useEffect, useState} from 'react';
 import './BasicInfoEdit.css'
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import moment from "moment";
-
 const {RangePicker} = DatePicker;
 const {Option} = Select;
 const options = ["Senior High School", "High School", "Diploma", "Bachelor", "Master", "Doctor", "MBA"]

@@ -1,7 +1,8 @@
 import {LoadingOutlined, PlusOutlined} from '@ant-design/icons';
-import { message, Upload } from 'antd';
-import { useState } from 'react';
+import {message, Upload} from 'antd';
+import {useState} from 'react';
 import './PhotoUpload.css'
+
 const getBase64 = (img, callback) => {
     const reader = new FileReader();
     reader.addEventListener('load', () => callback(reader.result));
@@ -27,8 +28,8 @@ const beforeUpload = (file) => {
 
 const PhotoUpload = () => {
     const [loading, setLoading] = useState(false);
-    const [imageUrl, setImageUrl] = useState();
-    const [, setUrl] = useState('')
+    const [imageUrl, setImageUrl] = useState('');
+    const [url, setUrl] = useState('')
 
     const handleChange = (info) => {
         console.log(info)
@@ -42,7 +43,6 @@ const PhotoUpload = () => {
             getBase64(info.file.originFileObj, (url) => {
                 setLoading(false);
                 setImageUrl(url);
-                console.log(info.file.response.data.URL)
                 setUrl(info.file.response.data.URL)
             });
 
@@ -51,7 +51,7 @@ const PhotoUpload = () => {
 
     const uploadButton = (
         <div>
-            {loading ? <LoadingOutlined /> : <PlusOutlined />}
+            {loading ? <LoadingOutlined/> : <PlusOutlined/>}
             <div
                 style={{
                     marginTop: 8,
@@ -73,9 +73,11 @@ const PhotoUpload = () => {
             beforeUpload={beforeUpload}
             onChange={handleChange}
         >
-            {imageUrl ? (
+            {url ? console.log(url) : null}
+            {url ? (
                 <img
-                    src={imageUrl}
+                    src={url}
+                    id={'img'}
                     alt="avatar"
                     style={{
                         width: '100%',
@@ -85,6 +87,7 @@ const PhotoUpload = () => {
                 uploadButton
             )}
         </Upload>
+
     );
 };
 

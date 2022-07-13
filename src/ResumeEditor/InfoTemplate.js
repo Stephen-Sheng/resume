@@ -77,7 +77,8 @@ export default function InfoTemplate(props) {
                     paddingBottom: "0px",
                     marginRight: "45px",
                 }}>
-                    {parse(description)}
+                    {console.log(description)}
+                    {description==="<p><br></p>"? null: parse(description)}
                 </Item>
             </Grid>
         </div>

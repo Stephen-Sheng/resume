@@ -5,7 +5,7 @@ import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import ResumeAppBar from "../ResumeAppBar";
 import PhotoUpload from "./PhotoUpload";
-import {useState} from "react";
+import {useEffect, useMemo, useState} from "react";
 import useHover from '@react-hook/hover'
 import Divider from "@mui/material/Divider";
 import InfoTemplate from "./InfoTemplate";
@@ -16,6 +16,8 @@ import IconButton from '@mui/material/IconButton';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import ProjectInfoEdit from "./ProjectInfoEdit";
+import OrgInfoEdit from "./OrgInfoEdit";
 
 const Item = styled("div")(({theme}) => ({
     // backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -29,56 +31,74 @@ const Item = styled("div")(({theme}) => ({
 export default function ResumeEditor() {
     const userInfoTarget = React.useRef(null)
     const eduInfoTarget = React.useRef(null)
+    const projectInfoTarget = React.useRef(null)
+    const orgInfoTarget = React.useRef(null)
 
     const [resumeName, setResumeName] = useState("");
     const [userName, setUserName] = useState("")
     const [phoneNum, setPhoneNum] = useState("")
     const [workLocation, setWorkLocation] = useState("")
     const [email, setEmail] = useState("")
+
     const isUserInfoHovering = useHover(userInfoTarget, {enterDelay: 0, leaveDelay: 0})
     const isEduHovering = useHover(eduInfoTarget, {enterDelay: 0, leaveDelay: 0})
+    const isProjectHovering = useHover(projectInfoTarget, {enterDelay: 0, leaveDelay: 0})
+    const isOrgInfoHovering = useHover(orgInfoTarget,{enterDelay: 0, leaveDelay: 0})
 
 
     const [eduInfo, setEduInfo] = useState([])
     const [eduIndex, setEduIndex] = useState(null)
 
     const [projectInfo, setProjectInfo] = useState([])
+    const [projectIndex, setProjectIndex] = useState(null)
 
     const [orgInfo, setOrgInfo] = useState([])
+    const [orgIndex, setOrgIndex] = useState(null)
 
     const [profSkills, setProfSkills] = useState("")
-
     const [otherSkill, setOtherSkill] = useState("")
 
     const [editStatus, setEditStatus] = useState(false)
-    const [eduEditStatus, setEduEditStatus] = useState(true)
+    const [eduEditStatus, setEduEditStatus] = useState(false)
+    const [projectEditStatus, setProjectEditStatus] = useState(false)
+    const [orgEditStatus, setOrgEditStatus] = useState(false)
+
+
 
     function handleClickName() {
         setEditStatus(!editStatus)
     }
 
+    function handleClickEdu(value) {
+        setEduIndex(value)
+        setEduEditStatus(!eduEditStatus)
+    }
+
+    function handleClickProject(value) {
+        setProjectIndex(value)
+        setProjectEditStatus(!projectEditStatus)
+    }
+
+    function handleClickOrg(value) {
+        setOrgIndex(value)
+        setOrgEditStatus(!orgEditStatus)
+    }
+
     function printDocument() {
-        const input = document.getElementById('printDoc');
-        input.style.height="auto";
-        html2canvas(input)
+        let input = document.getElementById('printDoc')
+        input.style.height = "auto";
+        console.log(document.getElementById('img'))
+        html2canvas(input,{allowTaint:true,useCORS:true})
             .then((canvas) => {
                 const imgData = canvas.toDataURL('image/png');
-                /*
-                Here are the numbers (paper width and height) that I found to work.
-                It still creates a little overlap part between the pages, but good enough for me.
-                if you can find an official number from jsPDF, use them.
-                */
                 const imgWidth = 210;
                 const pageHeight = 295;
                 const imgHeight = canvas.height * imgWidth / canvas.width;
                 let heightLeft = imgHeight;
-
-                const doc = new jsPDF('p', 'mm','a4');
+                const doc = new jsPDF('p', 'mm', 'a4');
                 let position = 0;
-
                 doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
                 heightLeft -= pageHeight;
-
                 while (heightLeft >= 0) {
                     position = heightLeft - imgHeight;
                     doc.addPage();
@@ -87,15 +107,9 @@ export default function ResumeEditor() {
                 }
                 let filename = 'test'
                 doc.save(filename + '.pdf');
-                input.style.height="1017px";
+                input.style.height = "1017px";
 
             })
-    }
-
-
-    function handleClickEdu(value) {
-        setEduIndex(value)
-        setEduEditStatus(!eduEditStatus)
     }
 
     return (
@@ -103,7 +117,7 @@ export default function ResumeEditor() {
             <ResumeAppBar printDocument={printDocument}/>
             <Grid container spacing={0} style={{marginTop: "0.5rem"}}>
                 <Grid item xs={2}></Grid>
-                {editStatus || eduEditStatus ? <Grid item xs={4}>
+                {editStatus || eduEditStatus || projectEditStatus || orgEditStatus? <Grid item xs={4}>
                     <Box
                         sx={{
                             display: 'flex',
@@ -123,6 +137,12 @@ export default function ResumeEditor() {
                             {eduEditStatus &&
                                 <EduInfoEdit setEditStatus={setEduEditStatus} eduInfo={eduInfo} setEduInfo={setEduInfo}
                                              eduIndex={eduIndex}/>}
+                            {projectEditStatus &&
+                                <ProjectInfoEdit setEditStatus={setProjectEditStatus} projectInfo={projectInfo}
+                                                 setProjectInfo={setProjectInfo} projectIndex={projectIndex}/>}
+                            {orgEditStatus &&
+                                <OrgInfoEdit setEditStatus={setOrgEditStatus} orgInfo={orgInfo}
+                                                 setOrgInfo={setOrgInfo} orgIndex={orgIndex}/>}
                         </Paper>
                     </Box>
                 </Grid> : <Grid item xs={2.5}>
@@ -133,7 +153,7 @@ export default function ResumeEditor() {
                             '& > :not(style)': {
                                 m: 1,
                                 width: 324,
-                                height: 1017,
+                                height: 817,
                             },
                         }}
                     >
@@ -156,7 +176,6 @@ export default function ResumeEditor() {
                 }
                 <Grid item xs={6}>
                     <Box
-                        id={"parent"}
                         sx={{
                             display: 'flex',
                             flexWrap: 'wrap',
@@ -266,46 +285,65 @@ export default function ResumeEditor() {
                             </div>
 
                             {/*    Project Experience*/}
-                            <Grid container spacing={0}>
-                                <Grid item xs={3}><Item style={{
-                                    fontWeight: 700,
-                                    fontSize: "17px",
-                                    paddingBottom: "0px",
-                                    textAlign: "left",
-                                    marginLeft: "40px"
-                                }}>Project</Item></Grid>
-                                <Divider style={{
-                                    width: '85%',
-                                    borderColor: "black",
-                                    marginLeft: "45px",
-                                    marginRight: "45px",
-                                    marginBottom: "5px"
-                                }}/>
-                            </Grid>
-                            {projectInfo.length !== 0 ? projectInfo.map((value, index) => {
-                                return (
-                                    <InfoTemplate key={index} infoObj={{
-                                        topic: value.projectName,
-                                        city: value.city,
-                                        department: value.department,
-                                        description: value.description,
-                                        role: value.role,
-                                        time: value.time
-                                    }}/>
-                                )
-                            }) : <div style={{
-                                fontSize: "12px",
-                                marginLeft: "50px",
-                                marginRight: "40px",
-                                marginBottom: "40px",
-                                color: "#606060"
+                            <div ref={projectInfoTarget} style={{
+                                backgroundColor: isProjectHovering ? '#EFEFF0' : 'white'
                             }}>
-                                Interviewers usually look for experience that is relevant to the position being applied
-                                for
+                                <Grid container spacing={0}>
+                                    <Grid item xs={3}><Item style={{
+                                        fontWeight: 700,
+                                        fontSize: "17px",
+                                        paddingBottom: "0px",
+                                        textAlign: "left",
+                                        marginLeft: "40px"
+                                    }}>Project</Item></Grid>
+                                    {isProjectHovering ?
+                                        <Grid item xs={9} style={{textAlign: "right", paddingRight: "60px"}}>
+                                            <IconButton aria-label="add" size="medium"
+                                                        onClick={() => handleClickProject(null)}
+                                                        style={{padding: "0px", top: "8px"}}>
+                                                <AddBoxIcon fontSize="inherit"/>
+                                            </IconButton>
+                                        </Grid> : null}
+                                    <Divider style={{
+                                        width: '85%',
+                                        borderColor: "black",
+                                        marginLeft: "45px",
+                                        marginRight: "45px",
+                                        marginBottom: "5px"
+                                    }}/>
+                                </Grid>
+                                {projectInfo.length !== 0 ? projectInfo.map((value, index) => {
+                                    return (
+                                        <div key={index} onClick={() => handleClickProject(index)}>
+                                        <InfoTemplate key={index} infoObj={{
+                                            topic: value.projectName,
+                                            city: value.city,
+                                            department: value.department,
+                                            description: value.description,
+                                            role: value.role,
+                                            time: value.time
+                                        }}/>
+                                        </div>
+                                    )
+                                }) : <div style={{
+                                    fontSize: "12px",
+                                    marginLeft: "50px",
+                                    marginRight: "40px",
+                                    paddingBottom: "40px",
+                                    cursor: "pointer",
+                                    color: "#606060"
+                                }} onClick={() => handleClickProject(null)}>
+                                    Interviewers usually look for experience that is relevant to the position being
+                                    applied
+                                    for
+                                </div>
+                                }
                             </div>
-                            }
 
                             {/*    Organization Exp part*/}
+                            <div ref={orgInfoTarget} style={{
+                                backgroundColor: isOrgInfoHovering ? '#EFEFF0' : 'white'
+                            }}>
                             <Grid container spacing={0}>
                                 <Grid item xs={3}><Item style={{
                                     fontWeight: 700,
@@ -314,6 +352,14 @@ export default function ResumeEditor() {
                                     textAlign: "left",
                                     marginLeft: "40px"
                                 }}>Organization</Item></Grid>
+                                {isOrgInfoHovering ?
+                                    <Grid item xs={9} style={{textAlign: "right", paddingRight: "60px"}}>
+                                        <IconButton aria-label="add" size="medium"
+                                                    onClick={() => handleClickOrg(null)}
+                                                    style={{padding: "0px", top: "8px"}}>
+                                            <AddBoxIcon fontSize="inherit"/>
+                                        </IconButton>
+                                    </Grid> : null}
                                 <Divider style={{
                                     width: '85%',
                                     borderColor: "black",
@@ -324,6 +370,7 @@ export default function ResumeEditor() {
                             </Grid>
                             {orgInfo.length !== 0 ? orgInfo.map((value, index) => {
                                 return (
+                                    <div key={index} onClick={() => handleClickOrg(index)}>
                                     <InfoTemplate key={index} infoObj={{
                                         topic: value.orgName,
                                         city: value.city,
@@ -332,17 +379,20 @@ export default function ResumeEditor() {
                                         role: value.role,
                                         time: value.time
                                     }}/>
+                                    </div>
                                 )
                             }) : <div style={{
                                 fontSize: "12px",
                                 marginLeft: "50px",
                                 marginRight: "40px",
-                                marginBottom: "40px",
-                                color: "#606060"
+                                paddingBottom: "40px",
+                                color: "#606060",
+                                cursor:"pointer"
                             }}>
                                 Can reflect students' strengths beyond academic ability
                             </div>
                             }
+                            </div>
 
                             {/*    Professional Skill Exp part*/}
                             <Grid container spacing={0}>
