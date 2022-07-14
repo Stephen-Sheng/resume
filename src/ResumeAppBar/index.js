@@ -15,10 +15,6 @@ import AdbIcon from '@mui/icons-material/Adb';
 import {Link as NaviLink, useNavigation} from 'react-navi';
 import {useContext, useState} from "react";
 import {UserContext} from "../context";
-import {DownloadLink} from "../ResumeTemplate";
-
-// const pages = ['Resume templates', 'Jobs at Leading Companies', 'Job Hunting Tips'];
-// const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 const ResumeAppBar = (props) => {
 

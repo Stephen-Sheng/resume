@@ -1,6 +1,6 @@
 import EditBackBar from "./EditBackBar";
-import {Button, Form, Input, DatePicker, Select} from 'antd';
-import React, {useEffect, useState} from 'react';
+import { Form, Input, DatePicker, Select} from 'antd';
+import React, {useState} from 'react';
 import './BasicInfoEdit.css'
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -77,7 +77,7 @@ export default function EduInfoEdit(props) {
                     <Select className={"my-input"} placeholder="Please choose your degree">
                         {options.map((value, index) => {
                             return (
-                                <Option value={value}>{value}</Option>
+                                <Option key={index} value={value}>{value}</Option>
                             )
                         })}
                     </Select>

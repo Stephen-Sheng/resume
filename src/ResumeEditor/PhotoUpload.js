@@ -28,7 +28,7 @@ const beforeUpload = (file) => {
 
 const PhotoUpload = () => {
     const [loading, setLoading] = useState(false);
-    const [imageUrl, setImageUrl] = useState('');
+    const [, setImageUrl] = useState('');
     const [url, setUrl] = useState('')
 
     const handleChange = (info) => {
@@ -73,8 +73,7 @@ const PhotoUpload = () => {
             beforeUpload={beforeUpload}
             onChange={handleChange}
         >
-            {url ? console.log(url) : null}
-            {url ? (
+            {url ?
                 <img
                     src={url}
                     id={'img'}
@@ -83,9 +82,9 @@ const PhotoUpload = () => {
                         width: '100%',
                     }}
                 />
-            ) : (
+                :
                 uploadButton
-            )}
+            }
         </Upload>
 
     );

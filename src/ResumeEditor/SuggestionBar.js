@@ -36,9 +36,15 @@ const ChipComp = (props) => {
 
 const ListItem = (props) => {
     let text = props.text;
-    return(
-        <ListItemButton sx={{pl: 4}} style={{padding:"0px 10px 0px 10px"}}>
-            <ListItemText style={{backgroundColor: "#f5f6fa",color:"#404040", fontSize:"14px",padding:"12px", marginTop:"6px"}}
+    return (
+        <ListItemButton sx={{pl: 4}} style={{padding: "0px 10px 0px 10px"}}>
+            <ListItemText style={{
+                backgroundColor: "#f5f6fa",
+                color: "#404040",
+                fontSize: "14px",
+                padding: "12px",
+                marginTop: "6px"
+            }}
                           primary={text}/>
         </ListItemButton>
     )
@@ -49,7 +55,6 @@ export default function SuggestionBar(props) {
     const {
         userName,
         phoneNum,
-        workLocation,
         email,
         eduInfo,
         projectInfo,
@@ -108,105 +113,118 @@ export default function SuggestionBar(props) {
         if (otherSkill.length === 0) {
             count++
         }
-        total+=count
+        total += count
         setOtherCount(count)
         setTotalCount(total)
 
-    }, [props.resumeInfo])
+    }, [eduInfo.length, email.length, orgInfo.length, otherSkill.length, phoneNum.length, profSkills.length, projectInfo.length, resumeName.length, userName.length])
 
     return (
         <>
-            <ResumeCheckBox score = {totalCount}/>
-        <List
-            sx={{width: '100%', maxWidth: 360, bgcolor: 'background.paper',  position: 'relative',
-                overflow: 'auto',
-                maxHeight: 817,}}
-            component="nav"
-            aria-labelledby="nested-list-subheader"
-            subheader={
-                <ListSubheader component="div" id="nested-list-subheader"
-                               style={{fontSize: "16px", fontWeight: 700, marginTop: "0px"}}>
-                    Resume Suggestions
-                </ListSubheader>
-            }
-        >
-            <ListItemButton onClick={() => setBasicOpen(!basicOpen)}
-                            style={{paddingTop: "10px", paddingBottom: "10px"}}>
-                <ListItemIcon>
-                    <FeedIcon/>
-                </ListItemIcon>
-                <ListItemText primary="Basic Information"/>
-                <ChipComp num={basicCount}/>
-                {basicOpen ? <ExpandLess/> : <ExpandMore/>}
-            </ListItemButton>
-            <Collapse in={basicOpen} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding >
-                    {userName.length === 0 && <ListItem text={"Important basic information is missing from your resume, please make sure you fill in your name"} />}
-                    {email.length === 0 && <ListItem text={"Email is an important basic information in the resume, it is recommended to fill in the common email"} />}
-                    {phoneNum.length === 0 && <ListItem text={"Phone number is an important basic information in the resume, please pay attention to complete and accurate filling"}/>}
-                    {resumeName.length === 0 && <ListItem text={"Note that the name of the resume file is modified according to the position submitted, generally using the format: applied job name_Name"}/>}
-                </List>
-            </Collapse>
+            <ResumeCheckBox score={totalCount}/>
+            <List
+                sx={{
+                    width: '100%', maxWidth: 360, bgcolor: 'background.paper', position: 'relative',
+                    overflow: 'auto',
+                    maxHeight: 817,
+                }}
+                component="nav"
+                aria-labelledby="nested-list-subheader"
+                subheader={
+                    <ListSubheader component="div" id="nested-list-subheader"
+                                   style={{fontSize: "16px", fontWeight: 700, marginTop: "0px"}}>
+                        Resume Suggestions
+                    </ListSubheader>
+                }
+            >
+                <ListItemButton onClick={() => setBasicOpen(!basicOpen)}
+                                style={{paddingTop: "10px", paddingBottom: "10px"}}>
+                    <ListItemIcon>
+                        <FeedIcon/>
+                    </ListItemIcon>
+                    <ListItemText primary="Basic Information"/>
+                    <ChipComp num={basicCount}/>
+                    {basicOpen ? <ExpandLess/> : <ExpandMore/>}
+                </ListItemButton>
+                <Collapse in={basicOpen} timeout="auto" unmountOnExit>
+                    <List component="div" disablePadding>
+                        {userName.length === 0 && <ListItem
+                            text={"Important basic information is missing from your resume, please make sure you fill in your name"}/>}
+                        {email.length === 0 && <ListItem
+                            text={"Email is an important basic information in the resume, it is recommended to fill in the common email"}/>}
+                        {phoneNum.length === 0 && <ListItem
+                            text={"Phone number is an important basic information in the resume, please pay attention to complete and accurate filling"}/>}
+                        {resumeName.length === 0 && <ListItem
+                            text={"Note that the name of the resume file is modified according to the position submitted, generally using the format: applied job name_Name"}/>}
+                    </List>
+                </Collapse>
 
-            <ListItemButton onClick={() => setEduOpen(!eduOpen)} style={{paddingTop: "10px", paddingBottom: "10px"}}>
-                <ListItemIcon>
-                    <SchoolIcon/>
-                </ListItemIcon>
-                <ListItemText primary="Education"/>
-                <ChipComp num={eduCount}/>
-                {eduOpen ? <ExpandLess/> : <ExpandMore/>}
-            </ListItemButton>
-            <Collapse in={eduOpen} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding style={{maxHeight: '100%', overflow: 'auto'}}>
-                    {eduInfo.length === 0 && <ListItem text={"Education experience is mandatory information on your CV, please fill in this section"}/>}
-                </List>
-            </Collapse>
+                <ListItemButton onClick={() => setEduOpen(!eduOpen)}
+                                style={{paddingTop: "10px", paddingBottom: "10px"}}>
+                    <ListItemIcon>
+                        <SchoolIcon/>
+                    </ListItemIcon>
+                    <ListItemText primary="Education"/>
+                    <ChipComp num={eduCount}/>
+                    {eduOpen ? <ExpandLess/> : <ExpandMore/>}
+                </ListItemButton>
+                <Collapse in={eduOpen} timeout="auto" unmountOnExit>
+                    <List component="div" disablePadding style={{maxHeight: '100%', overflow: 'auto'}}>
+                        {eduInfo.length === 0 && <ListItem
+                            text={"Education experience is mandatory information on your CV, please fill in this section"}/>}
+                    </List>
+                </Collapse>
 
-            <ListItemButton onClick={() => setProjectOpen(!projectOpen)}
-                            style={{paddingTop: "10px", paddingBottom: "10px"}}>
-                <ListItemIcon>
-                    <WorkIcon/>
-                </ListItemIcon>
-                <ListItemText primary={"Project"}/>
-                <ChipComp num={projectCount}/>
-                {projectOpen ? <ExpandLess/> : <ExpandMore/>}
-            </ListItemButton>
-            <Collapse in={projectOpen} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding >
-                    {projectInfo.length === 0 && <ListItem text={"Project experience should be the main body of the resume and it is recommended to add some more relevant project experience to the content."}/>}
-                </List>
-            </Collapse>
+                <ListItemButton onClick={() => setProjectOpen(!projectOpen)}
+                                style={{paddingTop: "10px", paddingBottom: "10px"}}>
+                    <ListItemIcon>
+                        <WorkIcon/>
+                    </ListItemIcon>
+                    <ListItemText primary={"Project"}/>
+                    <ChipComp num={projectCount}/>
+                    {projectOpen ? <ExpandLess/> : <ExpandMore/>}
+                </ListItemButton>
+                <Collapse in={projectOpen} timeout="auto" unmountOnExit>
+                    <List component="div" disablePadding>
+                        {projectInfo.length === 0 && <ListItem
+                            text={"Project experience should be the main body of the resume and it is recommended to add some more relevant project experience to the content."}/>}
+                    </List>
+                </Collapse>
 
-            <ListItemButton onClick={() => setProfOpen(!profOpen)} style={{paddingTop: "10px", paddingBottom: "10px"}}>
-                <ListItemIcon>
-                    <BarChartIcon/>
-                </ListItemIcon>
-                <ListItemText primary={"Professional Details"}/>
-                <ChipComp num={profCount}/>
-                {profOpen ? <ExpandLess/> : <ExpandMore/>}
-            </ListItemButton>
-            <Collapse in={profOpen} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding >
-                    {profSkills.length === 0 && <ListItem text={"Suggest adding descriptions and summaries of professional skills"}/>}
-                </List>
-            </Collapse>
+                <ListItemButton onClick={() => setProfOpen(!profOpen)}
+                                style={{paddingTop: "10px", paddingBottom: "10px"}}>
+                    <ListItemIcon>
+                        <BarChartIcon/>
+                    </ListItemIcon>
+                    <ListItemText primary={"Professional Details"}/>
+                    <ChipComp num={profCount}/>
+                    {profOpen ? <ExpandLess/> : <ExpandMore/>}
+                </ListItemButton>
+                <Collapse in={profOpen} timeout="auto" unmountOnExit>
+                    <List component="div" disablePadding>
+                        {profSkills.length === 0 &&
+                            <ListItem text={"Suggest adding descriptions and summaries of professional skills"}/>}
+                    </List>
+                </Collapse>
 
-            <ListItemButton onClick={() => setOtherOpen(!otherOpen)}
-                            style={{paddingTop: "10px", paddingBottom: "10px"}}>
-                <ListItemIcon>
-                    <BuildIcon/>
-                </ListItemIcon>
-                <ListItemText primary={"Other sections"}/>
-                <ChipComp num={otherCount}/>
-                {otherOpen ? <ExpandLess/> : <ExpandMore/>}
-            </ListItemButton>
-            <Collapse in={otherOpen} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding >
-                    {orgInfo.length === 0 && <ListItem text={"It is advisable to have at least one piece of organisational or event experience on your CV and it is recommended to add"}/>}
-                    {otherSkill.length === 0 && <ListItem text={"Suggest adding a description of language skills to increase competitiveness"}/>}
-                </List>
-            </Collapse>
-        </List>
+                <ListItemButton onClick={() => setOtherOpen(!otherOpen)}
+                                style={{paddingTop: "10px", paddingBottom: "10px"}}>
+                    <ListItemIcon>
+                        <BuildIcon/>
+                    </ListItemIcon>
+                    <ListItemText primary={"Other sections"}/>
+                    <ChipComp num={otherCount}/>
+                    {otherOpen ? <ExpandLess/> : <ExpandMore/>}
+                </ListItemButton>
+                <Collapse in={otherOpen} timeout="auto" unmountOnExit>
+                    <List component="div" disablePadding>
+                        {orgInfo.length === 0 && <ListItem
+                            text={"It is advisable to have at least one piece of organisational or event experience on your CV and it is recommended to add"}/>}
+                        {otherSkill.length === 0 && <ListItem
+                            text={"Suggest adding a description of language skills to increase competitiveness"}/>}
+                    </List>
+                </Collapse>
+            </List>
         </>
     );
 }

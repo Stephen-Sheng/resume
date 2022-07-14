@@ -5,7 +5,7 @@ import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import ResumeAppBar from "../ResumeAppBar";
 import PhotoUpload from "./PhotoUpload";
-import {useEffect, useMemo, useState} from "react";
+import {useState} from "react";
 import useHover from '@react-hook/hover'
 import Divider from "@mui/material/Divider";
 import InfoTemplate from "./InfoTemplate";
@@ -18,13 +18,16 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import ProjectInfoEdit from "./ProjectInfoEdit";
 import OrgInfoEdit from "./OrgInfoEdit";
+import parse from 'html-react-parser';
+import 'react-quill/dist/quill.snow.css';
+import ProfInfoEdit from "./ProfInfoEdit";
+import './PhotoUpload.css'
+import OtherInfoEdit from "./OtherInfoEdit";
 
 const Item = styled("div")(({theme}) => ({
-    // backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
     ...theme.typography.body2,
     padding: theme.spacing(1),
     textAlign: 'center',
-    // color: theme.palette.text.secondary,
     fontFamily: "Arial"
 }));
 
@@ -33,6 +36,8 @@ export default function ResumeEditor() {
     const eduInfoTarget = React.useRef(null)
     const projectInfoTarget = React.useRef(null)
     const orgInfoTarget = React.useRef(null)
+    const profInfoTarget = React.useRef(null)
+    const otherInfoTarget = React.useRef(null)
 
     const [resumeName, setResumeName] = useState("");
     const [userName, setUserName] = useState("")
@@ -43,7 +48,9 @@ export default function ResumeEditor() {
     const isUserInfoHovering = useHover(userInfoTarget, {enterDelay: 0, leaveDelay: 0})
     const isEduHovering = useHover(eduInfoTarget, {enterDelay: 0, leaveDelay: 0})
     const isProjectHovering = useHover(projectInfoTarget, {enterDelay: 0, leaveDelay: 0})
-    const isOrgInfoHovering = useHover(orgInfoTarget,{enterDelay: 0, leaveDelay: 0})
+    const isOrgInfoHovering = useHover(orgInfoTarget, {enterDelay: 0, leaveDelay: 0})
+    const isProfInfoHovering = useHover(profInfoTarget, {enterDelay: 0, leaveDelay: 0})
+    const isOtherInfoHovering = useHover(otherInfoTarget, {enterDelay: 0, leaveDelay: 0})
 
 
     const [eduInfo, setEduInfo] = useState([])
@@ -62,54 +69,71 @@ export default function ResumeEditor() {
     const [eduEditStatus, setEduEditStatus] = useState(false)
     const [projectEditStatus, setProjectEditStatus] = useState(false)
     const [orgEditStatus, setOrgEditStatus] = useState(false)
-
+    const [profEditStatus, setProfEditStatus] = useState(false)
+    const [otherEditStatus, setOtherEditStatus] = useState(false)
 
 
     function handleClickName() {
-        setEditStatus(!editStatus)
+        setEditStatus(true)
     }
 
     function handleClickEdu(value) {
         setEduIndex(value)
-        setEduEditStatus(!eduEditStatus)
+        setEduEditStatus(true)
     }
 
     function handleClickProject(value) {
         setProjectIndex(value)
-        setProjectEditStatus(!projectEditStatus)
+        setProjectEditStatus(true)
     }
 
     function handleClickOrg(value) {
         setOrgIndex(value)
-        setOrgEditStatus(!orgEditStatus)
+        setOrgEditStatus(true)
     }
 
-    function printDocument() {
+    function handleClickProf() {
+        setProfEditStatus(true)
+    }
+
+    function handleClickOther() {
+        setOtherEditStatus(true)
+    }
+
+    async function printDocument() {
         let input = document.getElementById('printDoc')
         input.style.height = "auto";
-        console.log(document.getElementById('img'))
-        html2canvas(input,{allowTaint:true,useCORS:true})
-            .then((canvas) => {
-                const imgData = canvas.toDataURL('image/png');
-                const imgWidth = 210;
-                const pageHeight = 295;
-                const imgHeight = canvas.height * imgWidth / canvas.width;
-                let heightLeft = imgHeight;
-                const doc = new jsPDF('p', 'mm', 'a4');
-                let position = 0;
-                doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                heightLeft -= pageHeight;
-                while (heightLeft >= 0) {
-                    position = heightLeft - imgHeight;
-                    doc.addPage();
-                    doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                    heightLeft -= pageHeight;
-                }
-                let filename = 'test'
-                doc.save(filename + '.pdf');
-                input.style.height = "1017px";
-
-            })
+        const canvas = await html2canvas(input, {
+            allowTaint: true, useCORS: true, onclone: (element) => {
+                let imgContainer = element.getElementById('img-container');
+                let innerImg = element.getElementById('img');
+                innerImg.style.width = "70%";
+                imgContainer.innerHTML = null;
+                imgContainer.appendChild(innerImg)
+            }
+        })
+        const imgData = canvas.toDataURL('image/png');
+        const imgWidth = 210;
+        const pageHeight = 295;
+        const imgHeight = canvas.height * imgWidth / canvas.width;
+        let heightLeft = imgHeight;
+        const doc = new jsPDF('p', 'mm', 'a4');
+        let position = 0;
+        doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+        while (heightLeft >= 0) {
+            position = heightLeft - imgHeight;
+            doc.addPage();
+            doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+        }
+        if (resumeName.length === 0) {
+            let filename = 'resume'
+            doc.save(filename + '.pdf');
+        } else {
+            doc.save(resumeName + '.pdf');
+        }
+        input.style.height = "1017px";
     }
 
     return (
@@ -117,62 +141,74 @@ export default function ResumeEditor() {
             <ResumeAppBar printDocument={printDocument}/>
             <Grid container spacing={0} style={{marginTop: "0.5rem"}}>
                 <Grid item xs={2}></Grid>
-                {editStatus || eduEditStatus || projectEditStatus || orgEditStatus? <Grid item xs={4}>
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            flexWrap: 'wrap',
-                            '& > :not(style)': {
-                                m: 1,
-                                width: 719,
-                                height: 700,
-                            },
-                        }}
-                    >
-                        <Paper elevation={0} style={{maxHeight: '100%', overflow: 'auto'}}>
-                            {editStatus && <BasicInfoEdit setEditStatus={setEditStatus} setUserName={setUserName}
-                                                          setPhoneNum={setPhoneNum} setWorkLocation={setWorkLocation}
-                                                          setEmail={setEmail} userName={userName} phoneNum={phoneNum}
-                                                          workLocation={workLocation} email={email}/>}
-                            {eduEditStatus &&
-                                <EduInfoEdit setEditStatus={setEduEditStatus} eduInfo={eduInfo} setEduInfo={setEduInfo}
-                                             eduIndex={eduIndex}/>}
-                            {projectEditStatus &&
-                                <ProjectInfoEdit setEditStatus={setProjectEditStatus} projectInfo={projectInfo}
-                                                 setProjectInfo={setProjectInfo} projectIndex={projectIndex}/>}
-                            {orgEditStatus &&
-                                <OrgInfoEdit setEditStatus={setOrgEditStatus} orgInfo={orgInfo}
+                {editStatus || eduEditStatus || projectEditStatus || orgEditStatus || profEditStatus || otherEditStatus ?
+                    <Grid item xs={4}>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                flexWrap: 'wrap',
+                                '& > :not(style)': {
+                                    m: 1,
+                                    width: 719,
+                                    height: 700,
+                                },
+                            }}
+                        >
+                            <Paper elevation={0} style={{maxHeight: '100%', overflow: 'auto'}}>
+                                {editStatus && <BasicInfoEdit setEditStatus={setEditStatus} setUserName={setUserName}
+                                                              setPhoneNum={setPhoneNum}
+                                                              setWorkLocation={setWorkLocation}
+                                                              setEmail={setEmail} userName={userName}
+                                                              phoneNum={phoneNum}
+                                                              workLocation={workLocation} email={email}/>}
+                                {eduEditStatus &&
+                                    <EduInfoEdit setEditStatus={setEduEditStatus} eduInfo={eduInfo}
+                                                 setEduInfo={setEduInfo}
+                                                 eduIndex={eduIndex}/>}
+                                {projectEditStatus &&
+                                    <ProjectInfoEdit setEditStatus={setProjectEditStatus} projectInfo={projectInfo}
+                                                     setProjectInfo={setProjectInfo} projectIndex={projectIndex}/>}
+                                {orgEditStatus &&
+                                    <OrgInfoEdit setEditStatus={setOrgEditStatus} orgInfo={orgInfo}
                                                  setOrgInfo={setOrgInfo} orgIndex={orgIndex}/>}
-                        </Paper>
-                    </Box>
-                </Grid> : <Grid item xs={2.5}>
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            flexWrap: 'wrap',
-                            '& > :not(style)': {
-                                m: 1,
-                                width: 324,
-                                height: 817,
-                            },
-                        }}
-                    >
-                        <Paper elevation={0}>
-                            <SuggestionBar resumeInfo={{
-                                userName,
-                                phoneNum,
-                                workLocation,
-                                email,
-                                eduInfo,
-                                projectInfo,
-                                orgInfo,
-                                profSkills,
-                                otherSkill,
-                                resumeName
-                            }}/>
-                        </Paper>
-                    </Box>
-                </Grid>
+                                {profEditStatus &&
+                                    <ProfInfoEdit setEditStatus={setProfEditStatus} profInfo={profSkills}
+                                                  setProfInfo={setProfSkills}/>
+                                }
+                                {otherEditStatus &&
+                                    <OtherInfoEdit setEditStatus={setOtherEditStatus} otherInfo={otherSkill}
+                                                   setOtherInfo={setOtherSkill}/>
+                                }
+                            </Paper>
+                        </Box>
+                    </Grid> : <Grid item xs={2.5}>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                flexWrap: 'wrap',
+                                '& > :not(style)': {
+                                    m: 1,
+                                    width: 324,
+                                    height: 817,
+                                },
+                            }}
+                        >
+                            <Paper elevation={0}>
+                                <SuggestionBar resumeInfo={{
+                                    userName,
+                                    phoneNum,
+                                    workLocation,
+                                    email,
+                                    eduInfo,
+                                    projectInfo,
+                                    orgInfo,
+                                    profSkills,
+                                    otherSkill,
+                                    resumeName
+                                }}/>
+                            </Paper>
+                        </Box>
+                    </Grid>
                 }
                 <Grid item xs={6}>
                     <Box
@@ -224,7 +260,7 @@ export default function ResumeEditor() {
                                         </Item>
                                     }
                                 </Grid>
-                                <Grid item xs={3}>
+                                <Grid id={'img-container'} item xs={3}>
                                     <PhotoUpload/>
                                 </Grid>
                             </Grid>
@@ -315,14 +351,14 @@ export default function ResumeEditor() {
                                 {projectInfo.length !== 0 ? projectInfo.map((value, index) => {
                                     return (
                                         <div key={index} onClick={() => handleClickProject(index)}>
-                                        <InfoTemplate key={index} infoObj={{
-                                            topic: value.projectName,
-                                            city: value.city,
-                                            department: value.department,
-                                            description: value.description,
-                                            role: value.role,
-                                            time: value.time
-                                        }}/>
+                                            <InfoTemplate key={index} infoObj={{
+                                                topic: value.projectName,
+                                                city: value.city,
+                                                department: value.department,
+                                                description: value.description,
+                                                role: value.role,
+                                                time: value.time
+                                            }}/>
                                         </div>
                                     )
                                 }) : <div style={{
@@ -344,85 +380,100 @@ export default function ResumeEditor() {
                             <div ref={orgInfoTarget} style={{
                                 backgroundColor: isOrgInfoHovering ? '#EFEFF0' : 'white'
                             }}>
-                            <Grid container spacing={0}>
-                                <Grid item xs={3}><Item style={{
-                                    fontWeight: 700,
-                                    fontSize: "17px",
-                                    paddingBottom: "0px",
-                                    textAlign: "left",
-                                    marginLeft: "40px"
-                                }}>Organization</Item></Grid>
-                                {isOrgInfoHovering ?
-                                    <Grid item xs={9} style={{textAlign: "right", paddingRight: "60px"}}>
-                                        <IconButton aria-label="add" size="medium"
-                                                    onClick={() => handleClickOrg(null)}
-                                                    style={{padding: "0px", top: "8px"}}>
-                                            <AddBoxIcon fontSize="inherit"/>
-                                        </IconButton>
-                                    </Grid> : null}
-                                <Divider style={{
-                                    width: '85%',
-                                    borderColor: "black",
-                                    marginLeft: "45px",
-                                    marginRight: "45px",
-                                    marginBottom: "5px"
-                                }}/>
-                            </Grid>
-                            {orgInfo.length !== 0 ? orgInfo.map((value, index) => {
-                                return (
-                                    <div key={index} onClick={() => handleClickOrg(index)}>
-                                    <InfoTemplate key={index} infoObj={{
-                                        topic: value.orgName,
-                                        city: value.city,
-                                        department: value.department,
-                                        description: value.description,
-                                        role: value.role,
-                                        time: value.time
+                                <Grid container spacing={0}>
+                                    <Grid item xs={3}><Item style={{
+                                        fontWeight: 700,
+                                        fontSize: "17px",
+                                        paddingBottom: "0px",
+                                        textAlign: "left",
+                                        marginLeft: "40px"
+                                    }}>Organization</Item></Grid>
+                                    {isOrgInfoHovering ?
+                                        <Grid item xs={9} style={{textAlign: "right", paddingRight: "60px"}}>
+                                            <IconButton aria-label="add" size="medium"
+                                                        onClick={() => handleClickOrg(null)}
+                                                        style={{padding: "0px", top: "8px"}}>
+                                                <AddBoxIcon fontSize="inherit"/>
+                                            </IconButton>
+                                        </Grid> : null}
+                                    <Divider style={{
+                                        width: '85%',
+                                        borderColor: "black",
+                                        marginLeft: "45px",
+                                        marginRight: "45px",
+                                        marginBottom: "5px"
                                     }}/>
-                                    </div>
-                                )
-                            }) : <div style={{
-                                fontSize: "12px",
-                                marginLeft: "50px",
-                                marginRight: "40px",
-                                paddingBottom: "40px",
-                                color: "#606060",
-                                cursor:"pointer"
-                            }}>
-                                Can reflect students' strengths beyond academic ability
-                            </div>
-                            }
-                            </div>
-
-                            {/*    Professional Skill Exp part*/}
-                            <Grid container spacing={0}>
-                                <Grid item xs={8}><Item style={{
-                                    fontWeight: 700,
-                                    fontSize: "17px",
-                                    paddingBottom: "0px",
-                                    textAlign: "left",
-                                    marginLeft: "40px"
-                                }}>Professional Skills</Item></Grid>
-                                <Divider style={{
-                                    width: '85%',
-                                    borderColor: "black",
-                                    marginLeft: "45px",
-                                    marginRight: "45px",
-                                    marginBottom: "5px"
-                                }}/>
-                            </Grid>
-                            {profSkills.length === 0 ?
-                                <div style={{
+                                </Grid>
+                                {orgInfo.length !== 0 ? orgInfo.map((value, index) => {
+                                    return (
+                                        <div key={index} onClick={() => handleClickOrg(index)}>
+                                            <InfoTemplate key={index} infoObj={{
+                                                topic: value.orgName,
+                                                city: value.city,
+                                                department: value.department,
+                                                description: value.description,
+                                                role: value.role,
+                                                time: value.time
+                                            }}/>
+                                        </div>
+                                    )
+                                }) : <div style={{
                                     fontSize: "12px",
                                     marginLeft: "50px",
                                     marginRight: "40px",
-                                    marginBottom: "40px",
-                                    color: "#606060"
-                                }}>
-                                    A summary of the acquisition of professional skills
-                                </div> : {profSkills}
-                            }
+                                    paddingBottom: "40px",
+                                    color: "#606060",
+                                    cursor: "pointer"
+                                }} onClick={() => handleClickOrg(null)}>
+                                    Can reflect students' strengths beyond academic ability
+                                </div>
+                                }
+                            </div>
+
+                            {/*    Professional Skill Exp part*/}
+                            <div ref={profInfoTarget} style={{
+                                backgroundColor: isProfInfoHovering ? '#EFEFF0' : 'white'
+                            }}>
+                                <Grid container spacing={0}>
+                                    <Grid item xs={8}><Item style={{
+                                        fontWeight: 700,
+                                        fontSize: "17px",
+                                        paddingBottom: "0px",
+                                        textAlign: "left",
+                                        marginLeft: "40px"
+                                    }}>Professional Skills</Item></Grid>
+                                    <Divider style={{
+                                        width: '85%',
+                                        borderColor: "black",
+                                        marginLeft: "45px",
+                                        marginRight: "45px",
+                                        marginBottom: "5px"
+                                    }}/>
+                                </Grid>
+                                {profSkills.length === 0 ?
+                                    <div style={{
+                                        fontSize: "12px",
+                                        marginLeft: "50px",
+                                        marginRight: "40px",
+                                        paddingBottom: "40px",
+                                        cursor: "pointer",
+                                        color: "#606060"
+                                    }} onClick={handleClickProf}>
+                                        A summary of the acquisition of professional skills
+                                    </div> : <Item style={{
+                                        textAlign: "left",
+                                        marginLeft: "15px",
+                                        paddingTop: "0px",
+                                        paddingBottom: "0px",
+                                        marginRight: "45px",
+                                        cursor: "pointer"
+                                    }} onClick={handleClickProf}> {parse(profSkills)}</Item>
+                                }
+                            </div>
                             {/*    Others part*/}
+                            <div ref={otherInfoTarget} style={{
+                                backgroundColor: isOtherInfoHovering ? '#EFEFF0' : 'white'
+                            }}>
                             <Grid container spacing={0}>
                                 <Grid item xs={3}><Item style={{
                                     fontWeight: 700,
@@ -444,12 +495,21 @@ export default function ResumeEditor() {
                                     fontSize: "12px",
                                     marginLeft: "50px",
                                     marginRight: "40px",
-                                    marginBottom: "40px",
-                                    color: "#606060"
-                                }}>
+                                    paddingBottom: "40px",
+                                    color: "#606060",
+                                    cursor:"pointer"
+                                }} onClick={handleClickOther}>
                                     Other skills and hobbies
-                                </div> : {otherSkill}
+                                </div> : <Item style={{
+                                    textAlign: "left",
+                                    marginLeft: "15px",
+                                    paddingTop: "0px",
+                                    paddingBottom: "0px",
+                                    marginRight: "45px",
+                                    cursor: "pointer"
+                                }} onClick={handleClickOther}> {parse(otherSkill)}</Item>
                             }
+                            </div>
                         </Paper>
                     </Box>
 

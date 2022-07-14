@@ -6,7 +6,6 @@ import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 import scoreBox from './score-box.png'
 import Button from "@mui/material/Button";
-import {useEffect} from "react";
 
 const Item = styled("div")(({ theme }) => ({
     textAlign: 'left',

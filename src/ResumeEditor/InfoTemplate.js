@@ -72,12 +72,11 @@ export default function InfoTemplate(props) {
             <Grid container spacing={0}>
                 <Item style={{
                     textAlign: "left",
-                    marginLeft: "40px",
+                    marginLeft: "15px",
                     paddingTop: "0px",
                     paddingBottom: "0px",
                     marginRight: "45px",
                 }}>
-                    {console.log(description)}
                     {description==="<p><br></p>"? null: parse(description)}
                 </Item>
             </Grid>
