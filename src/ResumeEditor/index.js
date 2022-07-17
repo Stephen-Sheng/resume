@@ -24,7 +24,7 @@ import ProfInfoEdit from "./ProfInfoEdit";
 import './PhotoUpload.css'
 import OtherInfoEdit from "./OtherInfoEdit";
 import AddButton from "./AddButton";
-import DeleteIcon from '@mui/icons-material/Delete';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 
 const Item = styled("div")(({theme}) => ({
     ...theme.typography.body2,
@@ -151,7 +151,7 @@ export default function ResumeEditor() {
                 projectInfo,
                 profSkills,
                 otherSkill
-            }}/>
+            }} resumeName={resumeName} setResumeName={setResumeName}/>
             <Grid container spacing={0} style={{marginTop: "0.5rem"}}>
                 <Grid item xs={2}></Grid>
                 {editStatus || eduEditStatus || projectEditStatus || orgEditStatus || profEditStatus || otherEditStatus ?

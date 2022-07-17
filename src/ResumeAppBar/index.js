@@ -11,21 +11,42 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
 import {Link as NaviLink, useNavigation} from 'react-navi';
 import {useContext, useState} from "react";
 import {UserContext} from "../context";
 import {DownloadLink} from "../ResumeTemplate";
+import EditIcon from '@mui/icons-material/Edit';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import { Modal } from 'antd';
+import TextField from "@mui/material/TextField";
+import {useInput} from "react-hookedup";
+
+
 
 const ResumeAppBar = (props) => {
 
-    const profile = props.profile
+    const {profile,resumeName,setResumeName} = props
     const [anchorElNav, setAnchorElNav] = useState(null);
     const [anchorElUser, setAnchorElUser] = useState(null);
     const navigation = useNavigation()
     // const printDocument = props.printDocument
     const {user, userDispatch} = useContext(UserContext);
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const resumeInput = useInput("")
 
+
+    const showModal = () => {
+        setIsModalVisible(true);
+    };
+
+    const handleOk = () => {
+        setResumeName(resumeInput.value)
+        setIsModalVisible(false);
+    };
+
+    const handleCancel = () => {
+        setIsModalVisible(false);
+    };
 
 
     const handleOpenNavMenu = (event) => {
@@ -48,7 +69,6 @@ const ResumeAppBar = (props) => {
 
 
     };
-
 
 
     function stringToColor(string) {
@@ -84,26 +104,38 @@ const ResumeAppBar = (props) => {
     }
 
     return (<AppBar position="static" style={{backgroundColor: "black"}}>
+
         <Container maxWidth="xl">
+
             <Toolbar disableGutters>
-                <AdbIcon sx={{display: {xs: 'none', md: 'flex'}, mr: 1}}/>
-                <Typography
-                    variant="h6"
-                    noWrap
-                    component="a"
-                    sx={{
-                        mr: 2,
-                        display: {xs: 'none', md: 'flex'},
-                        fontFamily: 'monospace',
-                        fontWeight: 700,
-                        letterSpacing: '.3rem',
-                        color: 'inherit',
-                        textDecoration: 'none',
-                    }}
-                    onClick={() => navigation.navigate('/')}
-                >
-                    LOGO
-                </Typography>
+                <Button variant="text" startIcon={<ChevronLeftIcon/>} style={{color: "white"}} onClick={()=>navigation.goBack()}>
+                    Back
+                </Button>
+                <Button variant="text" startIcon={<EditIcon/>} style={{color: "white",marginLeft:"1%"}} onClick={showModal}>
+                    {resumeName.length === 0? "Edit name":resumeName}
+                </Button>
+                <Modal title="Edit Resume Name" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+                    <TextField {...resumeInput.bindToInput} id="standard-basic" label="Name" variant="standard"/>
+                </Modal>
+
+                {/*<AdbIcon sx={{display: {xs: 'none', md: 'flex'}, mr: 1}}/>*/}
+                {/*<Typography*/}
+                {/*    variant="h6"*/}
+                {/*    noWrap*/}
+                {/*    component="a"*/}
+                {/*    sx={{*/}
+                {/*        mr: 2,*/}
+                {/*        display: {xs: 'none', md: 'flex'},*/}
+                {/*        fontFamily: 'monospace',*/}
+                {/*        fontWeight: 700,*/}
+                {/*        letterSpacing: '.3rem',*/}
+                {/*        color: 'inherit',*/}
+                {/*        textDecoration: 'none',*/}
+                {/*    }}*/}
+                {/*    onClick={() => navigation.navigate('/')}*/}
+                {/*>*/}
+                {/*    LOGO*/}
+                {/*</Typography>*/}
                 <Box sx={{flexGrow: 1, display: {xs: 'flex', md: 'none'}}}>
                     <IconButton
                         size="large"
@@ -142,11 +174,17 @@ const ResumeAppBar = (props) => {
                 {/*    fontWeight: "550",*/}
                 {/*    marginRight: "5em"*/}
                 {/*}}> Download </Button>*/}
-                <Button variant="contained" style={{
-                    borderRadius: "40px", background: "#ff3d3d", height: "150%", fontWeight: "550", marginRight:"5em"
-                }}> <DownloadLink profile={profile}/> </Button>
-                {user.id && <Box sx={{flexGrow: 0}} style={{marginLeft: "60rem"}}>
 
+                {user.id && <Box sx={{flexGrow: 0}} style={{marginLeft: "60rem"}}>
+                    <Button variant="contained" style={{
+                        borderRadius: "40px",
+                        background: "#ff3d3d",
+                        height: "150%",
+                        fontWeight: "550",
+                        marginRight: "5em"
+                    }}>
+                        <DownloadLink profile={profile}/>
+                    </Button>
                     <Tooltip title="Open settings">
                         <>
                             <IconButton onClick={handleOpenUserMenu} sx={{p: 0}}
@@ -175,7 +213,7 @@ const ResumeAppBar = (props) => {
                         </MenuItem>
                     </Menu>
                 </Box>}
-                {!user.id && <Box sx={{flexGrow: 0}} style={{marginLeft: "70rem"}}>
+                {!user.id && <Box sx={{flexGrow: 0}} style={{marginLeft: "55rem"}}>
                     <Button variant="outlined" style={{
                         borderRadius: "40px",
                         height: "150%",
