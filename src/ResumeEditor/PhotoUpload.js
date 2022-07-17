@@ -26,10 +26,9 @@ const beforeUpload = (file) => {
     return isJpgOrPng && isLt2M;
 };
 
-const PhotoUpload = () => {
+const PhotoUpload = ({photoUrl,setPhotoUrl}) => {
     const [loading, setLoading] = useState(false);
-    const [, setImageUrl] = useState('');
-    const [url, setUrl] = useState('')
+    // const [, setImageUrl] = useState('');
 
     const handleChange = (info) => {
         console.log(info)
@@ -42,8 +41,8 @@ const PhotoUpload = () => {
             // Get this url from response in real world.
             getBase64(info.file.originFileObj, (url) => {
                 setLoading(false);
-                setImageUrl(url);
-                setUrl(info.file.response.data.URL)
+                // setImageUrl(url);
+                setPhotoUrl(info.file.response.data.URL)
             });
 
         }
@@ -71,11 +70,11 @@ const PhotoUpload = () => {
             maxCount={1}
             action="http://localhost:8080/api/upload"
             beforeUpload={beforeUpload}
-            onChange={handleChange}
+            onChange={(info)=>handleChange(info)}
         >
-            {url ?
+            {photoUrl ?
                 <img
-                    src={url}
+                    src={photoUrl}
                     id={'img'}
                     alt="avatar"
                     style={{

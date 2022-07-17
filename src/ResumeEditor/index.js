@@ -12,10 +12,10 @@ import InfoTemplate from "./InfoTemplate";
 import SuggestionBar from "./SuggestionBar";
 import BasicInfoEdit from "./BasicInfoEdit";
 import EduInfoEdit from "./EduInfoEdit";
-import IconButton from '@mui/material/IconButton';
-import AddBoxIcon from '@mui/icons-material/AddBox';
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
+// import IconButton from '@mui/material/IconButton';
+// import AddBoxIcon from '@mui/icons-material/AddBox';
+// import html2canvas from "html2canvas";
+// import jsPDF from "jspdf";
 import ProjectInfoEdit from "./ProjectInfoEdit";
 import OrgInfoEdit from "./OrgInfoEdit";
 import parse from 'html-react-parser';
@@ -23,6 +23,8 @@ import 'react-quill/dist/quill.snow.css';
 import ProfInfoEdit from "./ProfInfoEdit";
 import './PhotoUpload.css'
 import OtherInfoEdit from "./OtherInfoEdit";
+import AddButton from "./AddButton";
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const Item = styled("div")(({theme}) => ({
     ...theme.typography.body2,
@@ -31,19 +33,28 @@ const Item = styled("div")(({theme}) => ({
     fontFamily: "Arial"
 }));
 
+
 export default function ResumeEditor() {
-    const userInfoTarget = React.useRef(null)
-    const eduInfoTarget = React.useRef(null)
-    const projectInfoTarget = React.useRef(null)
-    const orgInfoTarget = React.useRef(null)
-    const profInfoTarget = React.useRef(null)
-    const otherInfoTarget = React.useRef(null)
 
     const [resumeName, setResumeName] = useState("");
     const [userName, setUserName] = useState("")
     const [phoneNum, setPhoneNum] = useState("")
     const [workLocation, setWorkLocation] = useState("")
     const [email, setEmail] = useState("")
+    const [eduInfo, setEduInfo] = useState([])
+    const [projectInfo, setProjectInfo] = useState([])
+    const [orgInfo, setOrgInfo] = useState([])
+    const [profSkills, setProfSkills] = useState("")
+    const [otherSkill, setOtherSkill] = useState("")
+    const [photoUrl, setPhotoUrl] = useState('')
+
+
+    const userInfoTarget = React.useRef(null)
+    const eduInfoTarget = React.useRef(null)
+    const projectInfoTarget = React.useRef(null)
+    const orgInfoTarget = React.useRef(null)
+    const profInfoTarget = React.useRef(null)
+    const otherInfoTarget = React.useRef(null)
 
     const isUserInfoHovering = useHover(userInfoTarget, {enterDelay: 0, leaveDelay: 0})
     const isEduHovering = useHover(eduInfoTarget, {enterDelay: 0, leaveDelay: 0})
@@ -52,18 +63,9 @@ export default function ResumeEditor() {
     const isProfInfoHovering = useHover(profInfoTarget, {enterDelay: 0, leaveDelay: 0})
     const isOtherInfoHovering = useHover(otherInfoTarget, {enterDelay: 0, leaveDelay: 0})
 
-
-    const [eduInfo, setEduInfo] = useState([])
     const [eduIndex, setEduIndex] = useState(null)
-
-    const [projectInfo, setProjectInfo] = useState([])
     const [projectIndex, setProjectIndex] = useState(null)
-
-    const [orgInfo, setOrgInfo] = useState([])
     const [orgIndex, setOrgIndex] = useState(null)
-
-    const [profSkills, setProfSkills] = useState("")
-    const [otherSkill, setOtherSkill] = useState("")
 
     const [editStatus, setEditStatus] = useState(false)
     const [eduEditStatus, setEduEditStatus] = useState(false)
@@ -100,45 +102,56 @@ export default function ResumeEditor() {
         setOtherEditStatus(true)
     }
 
-    async function printDocument() {
-        let input = document.getElementById('printDoc')
-        input.style.height = "auto";
-        const canvas = await html2canvas(input, {
-            allowTaint: true, useCORS: true, onclone: (element) => {
-                let imgContainer = element.getElementById('img-container');
-                let innerImg = element.getElementById('img');
-                innerImg.style.width = "70%";
-                imgContainer.innerHTML = null;
-                imgContainer.appendChild(innerImg)
-            }
-        })
-        const imgData = canvas.toDataURL('image/png');
-        const imgWidth = 210;
-        const pageHeight = 295;
-        const imgHeight = canvas.height * imgWidth / canvas.width;
-        let heightLeft = imgHeight;
-        const doc = new jsPDF('p', 'mm', 'a4');
-        let position = 0;
-        doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
-        while (heightLeft >= 0) {
-            position = heightLeft - imgHeight;
-            doc.addPage();
-            doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-            heightLeft -= pageHeight;
-        }
-        if (resumeName.length === 0) {
-            let filename = 'resume'
-            doc.save(filename + '.pdf');
-        } else {
-            doc.save(resumeName + '.pdf');
-        }
-        input.style.height = "1017px";
-    }
+    // async function printDocument() {
+    //     let input = document.getElementById('printDoc')
+    //     input.style.height = "auto";
+    //     const canvas = await html2canvas(input, {
+    //         allowTaint: true, scale:2,useCORS: true, onclone: (element) => {
+    //             let imgContainer = element.getElementById('img-container');
+    //             let innerImg = element.getElementById('img');
+    //             innerImg.style.width = "70%";
+    //             imgContainer.innerHTML = null;
+    //             imgContainer.appendChild(innerImg)
+    //         }
+    //     })
+    //     const imgData = canvas.toDataURL('image/png');
+    //     const imgWidth = 210;
+    //     const pageHeight = 295;
+    //     const imgHeight = canvas.height * imgWidth / canvas.width;
+    //     let heightLeft = imgHeight;
+    //     const doc = new jsPDF('p', 'mm', 'a4');
+    //     let position = 0;
+    //     doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+    //     heightLeft -= pageHeight;
+    //     while (heightLeft >= 0) {
+    //         position = heightLeft - imgHeight;
+    //         doc.addPage();
+    //         doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+    //         heightLeft -= pageHeight;
+    //     }
+    //     if (resumeName.length === 0) {
+    //         let filename = 'resume'
+    //         doc.save(filename + '.pdf');
+    //     } else {
+    //         doc.save(resumeName + '.pdf');
+    //     }
+    //     input.style.height = "1017px";
+    // }
 
     return (
         <div style={{backgroundColor: "#353944"}}>
-            <ResumeAppBar printDocument={printDocument}/>
+            <ResumeAppBar profile={{
+                photoUrl,
+                userName,
+                email,
+                workLocation,
+                phoneNum,
+                eduInfo,
+                orgInfo,
+                projectInfo,
+                profSkills,
+                otherSkill
+            }}/>
             <Grid container spacing={0} style={{marginTop: "0.5rem"}}>
                 <Grid item xs={2}></Grid>
                 {editStatus || eduEditStatus || projectEditStatus || orgEditStatus || profEditStatus || otherEditStatus ?
@@ -261,7 +274,7 @@ export default function ResumeEditor() {
                                     }
                                 </Grid>
                                 <Grid id={'img-container'} item xs={3}>
-                                    <PhotoUpload/>
+                                    <PhotoUpload photoUrl={photoUrl} setPhotoUrl={setPhotoUrl}/>
                                 </Grid>
                             </Grid>
 
@@ -275,14 +288,7 @@ export default function ResumeEditor() {
                                         fontSize: "17px",
                                         paddingBottom: "0px",
                                     }}>Education</Item></Grid>
-                                    {isEduHovering ?
-                                        <Grid item xs={9} style={{textAlign: "right", paddingRight: "60px"}}>
-                                            <IconButton aria-label="add" size="medium"
-                                                        onClick={() => handleClickEdu(null)}
-                                                        style={{padding: "0px", top: "8px"}}>
-                                                <AddBoxIcon fontSize="inherit"/>
-                                            </IconButton>
-                                        </Grid> : null}
+                                    <AddButton isHovering={isEduHovering} handleClick={handleClickEdu}/>
                                     <Divider style={{
                                         width: '85%',
                                         borderColor: "black",
@@ -311,8 +317,10 @@ export default function ResumeEditor() {
                                                     department: value.degree,
                                                     description: value.description,
                                                     role: value.programName,
-                                                    time: value.time
-                                                }}/>
+                                                    time: value.time,
+                                                    index,
+                                                    info:eduInfo
+                                                }} setInfo={setEduInfo}/>
                                             </div>
                                         )
                                     })
@@ -332,14 +340,7 @@ export default function ResumeEditor() {
                                         textAlign: "left",
                                         marginLeft: "40px"
                                     }}>Project</Item></Grid>
-                                    {isProjectHovering ?
-                                        <Grid item xs={9} style={{textAlign: "right", paddingRight: "60px"}}>
-                                            <IconButton aria-label="add" size="medium"
-                                                        onClick={() => handleClickProject(null)}
-                                                        style={{padding: "0px", top: "8px"}}>
-                                                <AddBoxIcon fontSize="inherit"/>
-                                            </IconButton>
-                                        </Grid> : null}
+                                    <AddButton isHovering={isProjectHovering} handleClick={handleClickProject}/>
                                     <Divider style={{
                                         width: '85%',
                                         borderColor: "black",
@@ -357,8 +358,10 @@ export default function ResumeEditor() {
                                                 department: value.department,
                                                 description: value.description,
                                                 role: value.role,
-                                                time: value.time
-                                            }}/>
+                                                time: value.time,
+                                                index,
+                                                info:projectInfo
+                                            }} setInfo={setProjectInfo}/>
                                         </div>
                                     )
                                 }) : <div style={{
@@ -388,14 +391,7 @@ export default function ResumeEditor() {
                                         textAlign: "left",
                                         marginLeft: "40px"
                                     }}>Organization</Item></Grid>
-                                    {isOrgInfoHovering ?
-                                        <Grid item xs={9} style={{textAlign: "right", paddingRight: "60px"}}>
-                                            <IconButton aria-label="add" size="medium"
-                                                        onClick={() => handleClickOrg(null)}
-                                                        style={{padding: "0px", top: "8px"}}>
-                                                <AddBoxIcon fontSize="inherit"/>
-                                            </IconButton>
-                                        </Grid> : null}
+                                    <AddButton isHovering={isOrgInfoHovering} handleClick={handleClickOrg}/>
                                     <Divider style={{
                                         width: '85%',
                                         borderColor: "black",
@@ -413,8 +409,10 @@ export default function ResumeEditor() {
                                                 department: value.department,
                                                 description: value.description,
                                                 role: value.role,
-                                                time: value.time
-                                            }}/>
+                                                time: value.time,
+                                                index,
+                                                info:orgInfo
+                                            }} setInfo={setOrgInfo}/>
                                         </div>
                                     )
                                 }) : <div style={{
@@ -474,41 +472,41 @@ export default function ResumeEditor() {
                             <div ref={otherInfoTarget} style={{
                                 backgroundColor: isOtherInfoHovering ? '#EFEFF0' : 'white'
                             }}>
-                            <Grid container spacing={0}>
-                                <Grid item xs={3}><Item style={{
-                                    fontWeight: 700,
-                                    fontSize: "17px",
-                                    paddingBottom: "0px",
-                                    textAlign: "left",
-                                    marginLeft: "40px"
-                                }}>Other Abilities</Item></Grid>
-                                <Divider style={{
-                                    width: '85%',
-                                    borderColor: "black",
-                                    marginLeft: "45px",
-                                    marginRight: "45px",
-                                    marginBottom: "5px"
-                                }}/>
-                            </Grid>
-                            {otherSkill.length === 0 ?
-                                <div style={{
-                                    fontSize: "12px",
-                                    marginLeft: "50px",
-                                    marginRight: "40px",
-                                    paddingBottom: "40px",
-                                    color: "#606060",
-                                    cursor:"pointer"
-                                }} onClick={handleClickOther}>
-                                    Other skills and hobbies
-                                </div> : <Item style={{
-                                    textAlign: "left",
-                                    marginLeft: "15px",
-                                    paddingTop: "0px",
-                                    paddingBottom: "0px",
-                                    marginRight: "45px",
-                                    cursor: "pointer"
-                                }} onClick={handleClickOther}> {parse(otherSkill)}</Item>
-                            }
+                                <Grid container spacing={0}>
+                                    <Grid item xs={3}><Item style={{
+                                        fontWeight: 700,
+                                        fontSize: "17px",
+                                        paddingBottom: "0px",
+                                        textAlign: "left",
+                                        marginLeft: "40px"
+                                    }}>Other Abilities</Item></Grid>
+                                    <Divider style={{
+                                        width: '85%',
+                                        borderColor: "black",
+                                        marginLeft: "45px",
+                                        marginRight: "45px",
+                                        marginBottom: "5px"
+                                    }}/>
+                                </Grid>
+                                {otherSkill.length === 0 ?
+                                    <div style={{
+                                        fontSize: "12px",
+                                        marginLeft: "50px",
+                                        marginRight: "40px",
+                                        paddingBottom: "40px",
+                                        color: "#606060",
+                                        cursor: "pointer"
+                                    }} onClick={handleClickOther}>
+                                        Other skills and hobbies
+                                    </div> : <Item style={{
+                                        textAlign: "left",
+                                        marginLeft: "15px",
+                                        paddingTop: "0px",
+                                        paddingBottom: "0px",
+                                        marginRight: "45px",
+                                        cursor: "pointer"
+                                    }} onClick={handleClickOther}> {parse(otherSkill)}</Item>
+                                }
                             </div>
                         </Paper>
                     </Box>

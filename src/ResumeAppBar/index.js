@@ -15,14 +15,18 @@ import AdbIcon from '@mui/icons-material/Adb';
 import {Link as NaviLink, useNavigation} from 'react-navi';
 import {useContext, useState} from "react";
 import {UserContext} from "../context";
+import {DownloadLink} from "../ResumeTemplate";
 
 const ResumeAppBar = (props) => {
 
+    const profile = props.profile
     const [anchorElNav, setAnchorElNav] = useState(null);
     const [anchorElUser, setAnchorElUser] = useState(null);
     const navigation = useNavigation()
-    const printDocument = props.printDocument
+    // const printDocument = props.printDocument
     const {user, userDispatch} = useContext(UserContext);
+
+
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
@@ -44,6 +48,8 @@ const ResumeAppBar = (props) => {
 
 
     };
+
+
 
     function stringToColor(string) {
         let hash = 0;
@@ -129,13 +135,16 @@ const ResumeAppBar = (props) => {
                     >
                     </Menu>
                 </Box>
-                <Button variant="contained" onClick={printDocument} style={{
-                    borderRadius: "40px",
-                    background: "#ff3d3d",
-                    height: "150%",
-                    fontWeight: "550",
-                    marginRight: "5em"
-                }}> Download </Button>
+                {/*<Button variant="contained" onClick={printDocument} style={{*/}
+                {/*    borderRadius: "40px",*/}
+                {/*    background: "#ff3d3d",*/}
+                {/*    height: "150%",*/}
+                {/*    fontWeight: "550",*/}
+                {/*    marginRight: "5em"*/}
+                {/*}}> Download </Button>*/}
+                <Button variant="contained" style={{
+                    borderRadius: "40px", background: "#ff3d3d", height: "150%", fontWeight: "550", marginRight:"5em"
+                }}> <DownloadLink profile={profile}/> </Button>
                 {user.id && <Box sx={{flexGrow: 0}} style={{marginLeft: "60rem"}}>
 
                     <Tooltip title="Open settings">
