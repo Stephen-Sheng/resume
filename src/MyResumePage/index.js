@@ -9,18 +9,15 @@ import UploadFileIcon from '@mui/icons-material/UploadFile';
 import CalculateIcon from '@mui/icons-material/Calculate';
 import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
 import IconButton from "@mui/material/IconButton";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Divider from "@mui/material/Divider";
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import {Stack} from "@mui/material";
 import {useNavigation} from "react-navi";
+import {useResource} from "react-request-hook";
+import JobCard from "./JobCard";
+import {Spin} from "antd";
 
 function TabPanel(props) {
     const {children, value, index, ...other} = props;
@@ -52,11 +49,14 @@ export default function MyResumePage() {
     const [resumeCount, setResumeCount] = useState(0);
     const [value, setValue] = React.useState(0);
     const navigation = useNavigation();
-
+    const [jobList, requestJobList] = useResource(()=>({
+        url:"/get-job",
+        method:"GET",
+    }))
+    useEffect(() => requestJobList(), [requestJobList])
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
-
     return (
         <div style={{backgroundColor: "#f5f5f7"}}>
             <ResponsiveAppBar/>
@@ -160,67 +160,21 @@ export default function MyResumePage() {
                                 <Tab value={1} label="Recommended jobs"/>
                             </Tabs>
                             <TabPanel value={value} index={0}>
-                                <Stack
-                                    direction="row"
-                                    justifyContent="flex-start"
-                                    alignItems="flex-start"
-                                    spacing={3}
-                                >
-                                    <Card sx={{display: 'flex'}} style={{width: 331, height: 113}} component="span">
-                                        <CardMedia
-                                            component="img"
-                                            sx={{width: 54, height: 54}}
-                                            image="https://logo.wondercv.com/brand/brand_--sibrLosochoW1w.jpg"
-                                            alt="Live from space album cover"
-                                            style={{margin: "10px"}}
-                                        />
-                                        <Box sx={{display: 'flex', flexDirection: 'column'}}>
-                                            <CardContent sx={{flex: '1 0 auto'}}>
-                                                <Typography component="div" variant="h8">
-                                                    Tencent
-                                                </Typography>
-                                                <Typography variant="subtitle1" color="text.secondary" component="div">
-                                                    IT | China
-                                                </Typography>
-                                                <Divider/>
-                                                <Typography variant="subtitle1" color="text.secondary" component="div">
-                                                    <Button variant="text"
-                                                            startIcon={<AccessTimeIcon style={{color: "#f64"}}/>}
-                                                            style={{color: "inherit"}}>
-                                                        DDL: 03/09/22
-                                                    </Button>
-                                                </Typography>
-                                            </CardContent>
-                                        </Box>
-                                    </Card>
-                                    <Card sx={{display: 'flex'}} style={{width: 331, height: 113}} component="span">
-                                        <CardMedia
-                                            component="img"
-                                            sx={{width: 54, height: 54}}
-                                            image="https://logo.wondercv.com/brand/brand_--sibrLosochoW1w.jpg"
-                                            alt="Live from space album cover"
-                                            style={{margin: "10px"}}
-                                        />
-                                        <Box sx={{display: 'flex', flexDirection: 'column'}}>
-                                            <CardContent sx={{flex: '1 0 auto'}}>
-                                                <Typography component="div" variant="h8">
-                                                    Tencent 2023 Technology job
-                                                </Typography>
-                                                <Typography variant="subtitle1" color="text.secondary" component="div">
-                                                    IT | China
-                                                </Typography>
-                                                <Divider/>
-                                                <Typography variant="subtitle1" color="text.secondary" component="div">
-                                                    <Button variant="text"
-                                                            startIcon={<AccessTimeIcon style={{color: "#f64"}}/>}
-                                                            style={{color: "inherit"}}>
-                                                        DDL: 03/09/22
-                                                    </Button>
-                                                </Typography>
-                                            </CardContent>
-                                        </Box>
-                                    </Card>
-                                </Stack>
+                                <Grid container spacing={2}>
+                                    {jobList.isLoading || !jobList.data? <Spin />: jobList.data.data.map((value,index)=>{
+                                        return(
+                                            <JobCard key={index} company={value.company} location={value.location} ddl={value.ddl} id={value.id} logo={value.logo}></JobCard>
+                                        )
+                                    })}
+                                </Grid>
+                                {/*<Stack*/}
+                                {/*    direction="row"*/}
+                                {/*    justifyContent="flex-start"*/}
+                                {/*    alignItems="flex-start"*/}
+                                {/*    spacing={3}*/}
+                                {/*>*/}
+
+                                {/*</Stack>*/}
                                 <Button variant="outlined"
                                         style={{
                                             color: "#f64",

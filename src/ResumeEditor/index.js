@@ -24,7 +24,6 @@ import ProfInfoEdit from "./ProfInfoEdit";
 import './PhotoUpload.css'
 import OtherInfoEdit from "./OtherInfoEdit";
 import AddButton from "./AddButton";
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 
 const Item = styled("div")(({theme}) => ({
     ...theme.typography.body2,
