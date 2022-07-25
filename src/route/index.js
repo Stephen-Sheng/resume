@@ -6,6 +6,7 @@ import MyResumePage from "../MyResumePage";
 import ResumeEditor from "../ResumeEditor";
 import {ResumeTemplate} from "../ResumeTemplate";
 import SpecJobDetail from "../SpecJobDetail";
+import JobItemDetail from "../JobItemDetail";
 
 export const routes = mount({
     '/': route({view: <Home/>}),
@@ -19,5 +20,12 @@ export const routes = mount({
         return {
             view: <SpecJobDetail id={id}/>,
         }
+    }),
+    '/jobItem/:id': route(async req => {
+        let id = req.params.id
+        return {
+            view: <JobItemDetail id={id}/>,
+        }
     })
+
 })

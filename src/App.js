@@ -13,7 +13,7 @@ import * as React from "react";
 function App() {
 
     // noinspection JSCheckFunctionSignatures
-    const [user, userDispatch] = useReducer(userReducer, '11234')
+    const [user, userDispatch] = useReducer(userReducer, '')
     const [snackOpen, setSnackOpen] = useState(false)
     const [snackMsg, setSnackMsg] = useState('')
 

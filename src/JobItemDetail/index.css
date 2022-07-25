@@ -1,0 +1,28 @@
+/*!*.steps-content {*!*/
+/*!*    margin-top: 16px;*!*/
+/*!*    border: 1px dashed #e9e9e9;*!*/
+/*!*    border-radius: 6px;*!*/
+/*!*    background-color: #fafafa;*!*/
+/*!*    min-height: 200px;*!*/
+/*!*    text-align: center;*!*/
+/*!*    padding-top: 80px;*!*/
+/*!*}*!*/
+
+/*!*.steps-action {*!*/
+/*!*    margin-top: 24px;*!*/
+/*!*}*!*/
+
+/*.ant-steps-item-finish*/
+/*> .ant-steps-item-container*/
+/*> .ant-steps-item-content*/
+/*> .ant-steps-item-title::after {*/
+/*    background-color: #f64 !important;*/
+/*}*/
+
+.ant-steps-item-finish > .ant-steps-item-container > .ant-steps-item-tail:after {
+    background-color: #ff6644 !important;
+}
+
+.ant-steps-item-finish .ant-steps-item-icon>.ant-steps-icon .ant-steps-icon-dot {
+    background: #ff6644 !important;
+}

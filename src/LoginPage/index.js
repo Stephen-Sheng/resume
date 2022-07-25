@@ -19,8 +19,18 @@ import {useContext, useState} from "react";
 import {SnackContext, UserContext} from "../context";
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
+import styled from "styled-components";
 
-
+const OrangeBorderTextField = styled(TextField)`
+  & label.Mui-focused {
+    color: #ff6644;
+  }
+  & .MuiOutlinedInput-root {
+    &.Mui-focused fieldset {
+      border-color: #ff6644;
+    }
+  }
+`;
 function Copyright(props) {
     return (
         <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -42,7 +52,7 @@ export default function SignInSide() {
     let navigation = useNavigation()
     const {setSnackOpen, setSnackMsg} = useContext(SnackContext)
     const [loginErr, setLoginErr] = useState(false)
-    const {userDispatch} = useContext(UserContext)
+    const {user, userDispatch} = useContext(UserContext)
     const [, createLoginRequest] = useRequest((email, password) => ({
         url: '/login',
         method: 'post',
@@ -56,14 +66,22 @@ export default function SignInSide() {
             const data = await ready()
             if (data.status === 200) {
                 setSnackMsg(`Hello, ${data.data.username.split(" ")[0]}`)
-                setSnackOpen("true")
-                userDispatch({type: "LOGIN", username: data.data.username, email: data.data.email, id: data.data.id})
+                setSnackOpen(true)
+                await userDispatch({
+                    type: "LOGIN",
+                    username: data.data.username,
+                    id: data.data.id,
+                    university: data.data.university,
+                    degree:data.data.degree,
+                    photo:data.data.photo,
+                    lastupdate: data.data.lastupdate
+                })
                 await navigation.navigate("/")
             } else {
                 setLoginErr(true);
             }
         } catch (e) {
-            console.log("e")
+            console.log(e)
         }
     };
 
@@ -106,7 +124,7 @@ export default function SignInSide() {
                                 <AlertTitle>Login failed</AlertTitle>
                                 Invalid email or password — <strong>check it out!</strong>
                             </Alert>}
-                            <TextField
+                            <OrangeBorderTextField
                                 {...email.bindToInput}
                                 margin="normal"
                                 required
@@ -116,8 +134,9 @@ export default function SignInSide() {
                                 name="email"
                                 autoComplete="email"
                                 autoFocus
+                                variant={"outlined"}
                             />
-                            <TextField
+                            <OrangeBorderTextField
                                 {...password.bindToInput}
                                 margin="normal"
                                 required
@@ -127,6 +146,7 @@ export default function SignInSide() {
                                 type="password"
                                 id="password"
                                 autoComplete="current-password"
+                                variant={"outlined"}
                             />
                             <FormControlLabel
                                 control={<Checkbox value="remember" color="primary"/>}
@@ -137,6 +157,7 @@ export default function SignInSide() {
                                 fullWidth
                                 variant="contained"
                                 sx={{mt: 3, mb: 2}}
+                                style={{backgroundColor:"#f64"}}
                             >
                                 Sign In
                             </Button>

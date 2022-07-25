@@ -33,7 +33,7 @@ const ApplicationDetail = (props) => {
             </Grid>
             <Grid item xs={2.5}/>
             <Grid item xs={4} style={{marginBottom:"20px"}}>
-                <img alt={"job description"} src={detail} style={{display: "block", width: "823px", height: "926px"}}/>
+                <img alt={"job description"} src={detail} style={{display: "block", width: "140%", height: "auto"}}/>
             </Grid>
             <Grid item xs={1.8} />
             <Grid item xs={3} style={{position:"relative",top:"80px"}}>
