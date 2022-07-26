@@ -12,9 +12,11 @@ import PropTypes from "prop-types";
 import {useResource} from "react-request-hook";
 import {useEffect} from "react";
 import JobRecommendCard from "./JobRecommendCard";
+import {useNavigation} from "react-navi";
 
 function TabPanel(props) {
     const {children, value, index, ...other} = props;
+
 
     return (
         <div
@@ -40,6 +42,11 @@ TabPanel.propTypes = {
 };
 export default function JobRecommendTab(props) {
 
+    const navigation = useNavigation()
+    const handleMoreJob = () => {
+        navigation.navigate('/recruiting')
+
+    }
     const [value, setValue] = React.useState(0);
     const [jobList, requestJobList] = useResource(()=>({
         url:"/get-job",
@@ -101,7 +108,7 @@ export default function JobRecommendTab(props) {
                                 padding: "0px,20px,0px,20px",
                                 marginTop: "30px",
                                 left: "43%"
-                            }}>
+                            }} onClick={handleMoreJob}>
                         More Jobs
                     </Button>
                 </TabPanel>
@@ -120,7 +127,7 @@ export default function JobRecommendTab(props) {
                                 padding: "0px,20px,0px,20px",
                                 marginTop: "30px",
                                 left: "43%"
-                            }}>
+                            }} onClick={handleMoreJob}>
                         More Jobs
                     </Button>
                 </TabPanel>
