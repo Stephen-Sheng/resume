@@ -13,11 +13,9 @@ import * as React from "react";
 function App() {
 
     // noinspection JSCheckFunctionSignatures
-    const [user, userDispatch] = useReducer(userReducer, '')
+    const [user, userDispatch] = useReducer(userReducer, {username: null, email: null, id: null, university:null,degree:null,photo:null,lastupdate:null})
     const [snackOpen, setSnackOpen] = useState(false)
     const [snackMsg, setSnackMsg] = useState('')
-
-
 
     return (
         <RequestProvider value={axiosInstance}>

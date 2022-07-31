@@ -23,8 +23,13 @@ export default function MyResumePage() {
         url: `/get-resumes/${userId}`,
         method: 'GET',
     }));
-
-    useEffect(() => getResumes(user.id), [getResumes,user.id])
+    useEffect(()=>{
+        if(!user.id){
+            navigation.navigate('/sign-in')
+        }else{
+            getResumes(user.id)
+        }
+    },[getResumes,user.id,navigation])
 
     return (
         <div style={{backgroundColor: "#f5f5f7"}}>
@@ -42,7 +47,7 @@ export default function MyResumePage() {
                                 height: 790,
                             },
                         }}
-                        style={{marginBottom: "20px"}}
+                        style={{paddingBottom: "20px"}}
                     >
                         <Paper elevation={0}>
                             <Button variant="contained" style={{

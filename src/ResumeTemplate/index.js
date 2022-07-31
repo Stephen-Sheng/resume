@@ -1,5 +1,5 @@
 import React from 'react';
-import {Page, Text, Document, PDFDownloadLink, View, Image, PDFViewer} from '@react-pdf/renderer';
+import {Page, Text, Document, PDFDownloadLink, View, Image} from '@react-pdf/renderer';
 import Html from 'react-pdf-html';
 import 'react-quill/dist/quill.snow.css';
 import {styles, stylesheet} from "./utils";

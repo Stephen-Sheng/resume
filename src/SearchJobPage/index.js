@@ -7,7 +7,10 @@ import ResponsiveAppBar from "../AppBar";
 import Button from "@mui/material/Button";
 import JobTabs from "./JobTabs";
 import {useResource} from "react-request-hook";
-import JobRecommendCard from "./JobRecommendCard";
+import SearchCard from "./SearchCard";
+import {useState} from "react";
+import Pagination from "@mui/material/Pagination";
+import Box from "@mui/material/Box";
 
 const OrangeBorderTextField = styled(TextField)`
   & label.Mui-focused {
@@ -22,9 +25,10 @@ const OrangeBorderTextField = styled(TextField)`
 `;
 export default function SearchJobPage() {
 
+    const [jobItemPageApi, setJobItemPageApi] = useState(1);
     const searchContent = useInput("")
     const [searchList, getSearchList] = useResource(() => ({
-        url: `search-job/${searchContent.value}`,
+        url: `search-job/${searchContent.value}/${jobItemPageApi}`,
         method: "GET"
     }))
 
@@ -61,31 +65,55 @@ export default function SearchJobPage() {
                 <Grid item xs={2}/>
             </Grid>
             <div style={{backgroundColor: "#f5f5f7", paddingTop: "30px"}}>
-                <Grid container spacing={2}>
-                    {searchList.isLoading || !searchList.data ? null :
-                        searchList.data.data.map((value, index) => {
+                <Box
+                    sx={{
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        '& > :not(style)': {
+                            m: 1,
+                            width: 1975,
+                            height: 710,
+                        },
+                    }}
+                    style={{paddingBottom: "20px",backgroundColor: "#f5f5f7"}}
+                >
+                    <div>
+                <Grid container spacing={2} style={{height:"fit-content"}}>
+                    {searchList.isLoading || !searchList.data ? null : <>
+                        {searchList.data.data.dataList.map((value, index) => {
                             return (
-                                <>
-                                    <Grid item xs={3}/>
+                                <React.Fragment key={index}>
+                                    <Grid item xs={4}/>
 
-                                    <Grid item key={index} xs={6}>
-                                        <JobRecommendCard name={value.itemname} city={value.city}
-                                                          salary={value.salary} id={value.id} degree={value.degree}
-                                                          company={value.company}></JobRecommendCard>
+                                    <Grid item xs={5}>
+                                        <SearchCard name={value.itemname} city={value.city}
+                                                    salary={value.salary} id={value.id} degree={value.degree}
+                                                    company={value.company}/>
                                     </Grid>
                                     <Grid item xs={3}/>
-                                </>
+                                </React.Fragment>
                             )
-                        })
+                        })}
+                        <Grid item xs={4}/>
+                        <Grid item xs={8} style={{textAlign:"center"}}>
+                            <Pagination count={searchList.data.data.pages}
+                                        page={jobItemPageApi}
+                                        shape="rounded"
+                                        onChange={(e, value) => setJobItemPageApi(value)}/>
+                        </Grid>
+                    </>
                     }
                     {searchList.isLoading || !searchList.data ?
-                        <><Grid item xs={3}/>
+                        <>
+                            <Grid item xs={3}/>
                             <Grid item xs={7} style={{backgroundColor: "#f5f5f7"}}>
                                 <JobTabs/>
                             </Grid>
                             <Grid item xs={2}/>
                         </> : null}
                 </Grid>
+                    </div>
+                </Box>
             </div>
         </>
     )

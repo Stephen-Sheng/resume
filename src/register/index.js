@@ -17,6 +17,7 @@ import {useContext, useState} from "react";
 import {SnackContext} from "../context";
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
+import md5 from "md5"
 function Copyright(props) {
     return (
         <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -43,7 +44,7 @@ export default function SignUp() {
     const [,createRegRequest] = useRequest((username,password,email)=>({
         url:'/register',
         method:'POST',
-        data:{username,password,email}
+        data:{username,password:md5(password),email}
     }))
     const handleSubmit = async (event) => {
         event.preventDefault();

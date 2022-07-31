@@ -49,11 +49,11 @@ export default function JobRecommendTab(props) {
     }
     const [value, setValue] = React.useState(0);
     const [jobList, requestJobList] = useResource(()=>({
-        url:"/get-job",
+        url:"/get-job/1",
         method:"GET"
     }))
     const [recomJobList,requestRecomJobList] = useResource(()=>({
-        url:"/get-recomJobList",
+        url:"/get-recomJobList/1",
         method:"GET"
     }))
     useEffect(() => {
@@ -95,7 +95,7 @@ export default function JobRecommendTab(props) {
                 </Tabs>
                 <TabPanel value={value} index={0}>
                     <Grid container spacing={2}>
-                        {jobList.isLoading || !jobList.data? <Spin />: jobList.data.data.map((value,index)=>{
+                        {jobList.isLoading || !jobList.data? <Spin />: jobList.data.data.dataList.map((value,index)=>{
                             return(
                                 <JobCard key={index} company={value.company} location={value.location} ddl={value.ddl} id={value.id} logo={value.logo}></JobCard>
                             )
@@ -114,7 +114,7 @@ export default function JobRecommendTab(props) {
                 </TabPanel>
                 <TabPanel value={value} index={1}>
                     <Grid container spacing={2}>
-                        {recomJobList.isLoading || !recomJobList.data? <Spin />: recomJobList.data.data.map((value,index)=>{
+                        {recomJobList.isLoading || !recomJobList.data? <Spin />: recomJobList.data.data.dataList.map((value,index)=>{
                             return(
                                 <JobRecommendCard key={index} name={value.itemname} city={value.city} salary={value.salary} id={value.id} degree={value.degree} company={value.company}></JobRecommendCard>
                             )

@@ -20,6 +20,7 @@ import {SnackContext, UserContext} from "../context";
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import styled from "styled-components";
+import md5 from "md5"
 
 const OrangeBorderTextField = styled(TextField)`
   & label.Mui-focused {
@@ -52,11 +53,11 @@ export default function SignInSide() {
     let navigation = useNavigation()
     const {setSnackOpen, setSnackMsg} = useContext(SnackContext)
     const [loginErr, setLoginErr] = useState(false)
-    const {user, userDispatch} = useContext(UserContext)
+    const {userDispatch} = useContext(UserContext)
     const [, createLoginRequest] = useRequest((email, password) => ({
         url: '/login',
         method: 'post',
-        data: {email, password}
+        data: {email, password:md5(password)}
     }));
 
     const handleSubmit = async (event) => {

@@ -167,7 +167,7 @@ const ResponsiveAppBar = () => {
                         <NaviLink>
                             <Button
                                 // onClick={handleCloseNavMenu}
-                                // onClick={handleNavi}
+                                onClick={()=>navigation.navigate('/recruiting')}
                                 sx={{my: 2, color: 'white', display: 'block'}}
                             >
                                 Jobs at Leading Companies
