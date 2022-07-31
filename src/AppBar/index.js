@@ -157,8 +157,6 @@ const ResponsiveAppBar = () => {
                         </NaviLink>}
                         <NaviLink>
                             <Button
-                                // onClick={handleCloseNavMenu}
-                                // onClick={handleNavi}
                                 sx={{my: 2, color: 'white', display: 'block'}}
                             >
                                 Resume templates
@@ -166,7 +164,6 @@ const ResponsiveAppBar = () => {
                         </NaviLink>
                         <NaviLink>
                             <Button
-                                // onClick={handleCloseNavMenu}
                                 onClick={()=>navigation.navigate('/recruiting')}
                                 sx={{my: 2, color: 'white', display: 'block'}}
                             >
@@ -175,8 +172,7 @@ const ResponsiveAppBar = () => {
                         </NaviLink>
                         <NaviLink>
                             <Button
-                                // onClick={handleCloseNavMenu}
-                                // onClick={handleNavi}
+                                onClick={()=>navigation.navigate('/tips')}
                                 sx={{my: 2, color: 'white', display: 'block'}}
                             >
                                 Job Hunting Tips

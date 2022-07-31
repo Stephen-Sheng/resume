@@ -12,7 +12,7 @@ import {useState} from "react";
 import Pagination from "@mui/material/Pagination";
 import Box from "@mui/material/Box";
 
-const OrangeBorderTextField = styled(TextField)`
+export const OrangeBorderTextField = styled(TextField)`
   & label.Mui-focused {
     color: #ff6644;
   }
@@ -75,43 +75,43 @@ export default function SearchJobPage() {
                             height: 710,
                         },
                     }}
-                    style={{paddingBottom: "20px",backgroundColor: "#f5f5f7"}}
+                    style={{paddingBottom: "20px", backgroundColor: "#f5f5f7"}}
                 >
                     <div>
-                <Grid container spacing={2} style={{height:"fit-content"}}>
-                    {searchList.isLoading || !searchList.data ? null : <>
-                        {searchList.data.data.dataList.map((value, index) => {
-                            return (
-                                <React.Fragment key={index}>
-                                    <Grid item xs={4}/>
+                        <Grid container spacing={2} style={{height: "fit-content"}}>
+                            {searchList.isLoading || !searchList.data ? null : <>
+                                {searchList.data.data.dataList.map((value, index) => {
+                                    return (
+                                        <React.Fragment key={index}>
+                                            <Grid item xs={4}/>
 
-                                    <Grid item xs={5}>
-                                        <SearchCard name={value.itemname} city={value.city}
-                                                    salary={value.salary} id={value.id} degree={value.degree}
-                                                    company={value.company}/>
-                                    </Grid>
+                                            <Grid item xs={5}>
+                                                <SearchCard name={value.itemname} city={value.city}
+                                                            salary={value.salary} id={value.id} degree={value.degree}
+                                                            company={value.company}/>
+                                            </Grid>
+                                            <Grid item xs={3}/>
+                                        </React.Fragment>
+                                    )
+                                })}
+                                <Grid item xs={4}/>
+                                <Grid item xs={8} style={{textAlign: "center"}}>
+                                    <Pagination count={searchList.data.data.pages}
+                                                page={jobItemPageApi}
+                                                shape="rounded"
+                                                onChange={(e, value) => setJobItemPageApi(value)}/>
+                                </Grid>
+                            </>
+                            }
+                            {searchList.isLoading || !searchList.data ?
+                                <>
                                     <Grid item xs={3}/>
-                                </React.Fragment>
-                            )
-                        })}
-                        <Grid item xs={4}/>
-                        <Grid item xs={8} style={{textAlign:"center"}}>
-                            <Pagination count={searchList.data.data.pages}
-                                        page={jobItemPageApi}
-                                        shape="rounded"
-                                        onChange={(e, value) => setJobItemPageApi(value)}/>
+                                    <Grid item xs={7} style={{backgroundColor: "#f5f5f7"}}>
+                                        <JobTabs/>
+                                    </Grid>
+                                    <Grid item xs={2}/>
+                                </> : null}
                         </Grid>
-                    </>
-                    }
-                    {searchList.isLoading || !searchList.data ?
-                        <>
-                            <Grid item xs={3}/>
-                            <Grid item xs={7} style={{backgroundColor: "#f5f5f7"}}>
-                                <JobTabs/>
-                            </Grid>
-                            <Grid item xs={2}/>
-                        </> : null}
-                </Grid>
                     </div>
                 </Box>
             </div>

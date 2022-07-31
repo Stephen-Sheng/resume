@@ -8,6 +8,7 @@ import {ResumeTemplate} from "../ResumeTemplate";
 import SpecJobDetail from "../SpecJobDetail";
 import JobItemDetail from "../JobItemDetail";
 import SearchJobPage from "../SearchJobPage";
+import JobTips from "../JobTips";
 
 export const routes = mount({
     '/': route({view: <Home/>}),
@@ -28,6 +29,7 @@ export const routes = mount({
             view: <JobItemDetail id={id}/>,
         }
     }),
-    '/recruiting':route({view:<SearchJobPage />})
+    '/recruiting':route({view:<SearchJobPage />}),
+    '/tips':route({view:<JobTips />})
 
 })
