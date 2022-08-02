@@ -9,6 +9,7 @@ import SpecJobDetail from "../SpecJobDetail";
 import JobItemDetail from "../JobItemDetail";
 import SearchJobPage from "../SearchJobPage";
 import JobTips from "../JobTips";
+import PostDetailPage from "../PostDetailPage";
 
 export const routes = mount({
     '/': route({view: <Home/>}),
@@ -30,6 +31,12 @@ export const routes = mount({
         }
     }),
     '/recruiting':route({view:<SearchJobPage />}),
-    '/tips':route({view:<JobTips />})
+    '/tips':route({view:<JobTips />}),
+    '/post/:id':route(async req=>{
+        let id = req.params.id
+        return{
+            view:<PostDetailPage postId={id} />
+        }
+    })
 
 })

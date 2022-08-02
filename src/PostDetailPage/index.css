@@ -1,0 +1,15 @@
+.loginBtn{
+    border:2px solid #ff6644 !important;
+    color:#ff6644 !important;
+
+}
+.signBtn{
+    background-color: #ff6644 !important;
+    border-color: #ff6644 !important;
+}
+.react-responsive-modal-modal{
+    max-width: 480px !important;
+}
+.react-responsive-modal-modal h2, .react-responsive-modal-modal p{
+    margin-bottom: 10px !important;
+}

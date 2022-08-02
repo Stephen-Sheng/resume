@@ -116,7 +116,7 @@ export default function JobTips() {
                                             {postsList.data.data.dataList.map((value, index) => {
                                                 return (
                                                     <React.Fragment key={index}>
-                                                        <PostList cover={value.cover} postTitle={value.postTitle}
+                                                        <PostList id={value.id} cover={value.cover} postTitle={value.postTitle}
                                                                   summary={value.summary} category={value.category}
                                                                   postDate={value.postDate}/>
                                                         <Grid item xs={3}/>

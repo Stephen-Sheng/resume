@@ -12,15 +12,15 @@ import {useNavigation} from "react-navi";
 
 export default function PostList(props) {
 
-    const {summary, postTitle, postDate, category,cover} = props
+    const {id,summary, postTitle, postDate, category,cover} = props
     const navigation = useNavigation();
-    // function handleClickJob() {
-    //     navigation.navigate(`/job/${id}`)
-    // }
+    function handleClickPost() {
+        navigation.navigate(`/post/${id}`)
+    }
 
     return(
         <Grid item xs={6} style={{cursor:"pointer"}}>
-            <Card sx={{display: 'flex'}} style={{width: 786, height: 173}} component="span">
+            <Card sx={{display: 'flex'}} style={{width: 786, height: 173}} component="span" onClick={handleClickPost}>
                 <CardMedia
                     component="img"
                     sx={{maxWidth: "165px", maxHeight: "155px"}}
