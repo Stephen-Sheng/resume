@@ -9,6 +9,9 @@ import 'react-comments-section/dist/index.css'
 import {UserContext} from "../context";
 import "./index.css"
 import moment from "moment";
+import parse from 'html-react-parser';
+import 'react-quill/dist/quill.snow.css';
+
 
 
 export default function PostDetailPage({postId}) {
@@ -155,7 +158,7 @@ export default function PostDetailPage({postId}) {
                                     <Grid container spacing={2} style={{height: "fit-content", paddingLeft: "36px",maxHeight: '100%', overflow: 'auto'}}>
                                         <Grid item xs={12}
                                               style={{fontSize: "32px", fontWeight: "500", color: "#404040"}}>
-                                            {postDetail.data.data.postTitle}
+                                            {postDetail.data.data.post_title}
                                         </Grid>
                                         <Grid item xs={2} style={{
                                             fontSize: "14px",
@@ -163,7 +166,7 @@ export default function PostDetailPage({postId}) {
                                             marginBottom: "40px",
                                             paddingTop: "0px"
                                         }}>
-                                            {postDetail.data.data.postDate}
+                                            {postDetail.data.data.post_date}
                                         </Grid>
                                         <Grid item xs={10} style={{
                                             fontSize: "14px",
@@ -171,11 +174,11 @@ export default function PostDetailPage({postId}) {
                                             marginBottom: "40px",
                                             paddingTop: "0px"
                                         }}>
-                                            {postDetail.data.data.authorId}
+                                            {postDetail.data.data.username}
                                         </Grid>
                                         <Grid item xs={12}
                                               style={{fontWeight: "400", lineHeight: "26px", color: "#404040"}}>
-                                            {postDetail.data.data.postText}
+                                            {parse(postDetail.data.data.post_text)}
                                         </Grid>
                                         <Grid item xs={12}>
                                             {comments.isLoading || !comments.data ? null : console.log(comments.data.data)}

@@ -2,7 +2,6 @@ import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -18,6 +17,7 @@ import {SnackContext} from "../context";
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import md5 from "md5"
+import {OrangeBorderTextField} from "../SearchJobPage";
 function Copyright(props) {
     return (
         <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -38,6 +38,7 @@ export default function SignUp() {
     const password = useInput("")
     const firstName = useInput("")
     const lastName = useInput("")
+    const passwordConfirm = useInput("")
     const navigation = useNavigation()
     const {setSnackOpen, setSnackMsg} = useContext(SnackContext)
     const [regErr, setRegErr] = useState(false)
@@ -91,7 +92,7 @@ export default function SignUp() {
                         </Alert>}
                         <Grid container spacing={2}>
                             <Grid item xs={12} sm={6}>
-                                <TextField
+                                <OrangeBorderTextField
                                     {...firstName.bindToInput}
                                     autoComplete="given-name"
                                     name="firstName"
@@ -103,7 +104,7 @@ export default function SignUp() {
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6}>
-                                <TextField
+                                <OrangeBorderTextField
                                     {...lastName.bindToInput}
                                     required
                                     fullWidth
@@ -114,7 +115,7 @@ export default function SignUp() {
                                 />
                             </Grid>
                             <Grid item xs={12}>
-                                <TextField
+                                <OrangeBorderTextField
                                     {...email.bindToInput}
                                     required
                                     fullWidth
@@ -125,7 +126,7 @@ export default function SignUp() {
                                 />
                             </Grid>
                             <Grid item xs={12}>
-                                <TextField
+                                <OrangeBorderTextField
                                     {...password.bindToInput}
                                     required
                                     fullWidth
@@ -134,6 +135,20 @@ export default function SignUp() {
                                     type="password"
                                     id="password"
                                     autoComplete="new-password"
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <OrangeBorderTextField
+                                    {...passwordConfirm.bindToInput}
+                                    required
+                                    fullWidth
+                                    name="passwordConfirm"
+                                    label="Password Confirmation"
+                                    type="password"
+                                    id="passwordConfirm"
+                                    autoComplete="new-password"
+                                    error={password.value === passwordConfirm.value?false:true}
+                                    helperText={"Please ensure that you enter the same password twice"}
                                 />
                             </Grid>
                             {/*<Grid item xs={12}>*/}
@@ -147,6 +162,7 @@ export default function SignUp() {
                             type="submit"
                             fullWidth
                             variant="contained"
+                            style={{backgroundColor:"#f64"}}
                             sx={{mt: 3, mb: 2}}
                         >
                             Sign Up

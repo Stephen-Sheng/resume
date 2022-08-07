@@ -8,7 +8,6 @@ import AddIcon from '@mui/icons-material/Add';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import {useContext, useEffect} from "react";
 import {useNavigation} from "react-navi";
-import {useResource} from "react-request-hook";
 import {UserContext} from "../context";
 import BottomBar from "./BottomBar";
 import JobRecommendTab from "./JobRecommendTab";
@@ -19,17 +18,11 @@ export default function MyResumePage() {
 
     const navigation = useNavigation();
     const {user} = useContext(UserContext)
-    const [resumes, getResumes] = useResource((userId) => ({
-        url: `/get-resumes/${userId}`,
-        method: 'GET',
-    }));
     useEffect(()=>{
         if(!user.id){
             navigation.navigate('/sign-in')
-        }else{
-            getResumes(user.id)
         }
-    },[getResumes,user.id,navigation])
+    },[user.id,navigation])
 
     return (
         <div style={{backgroundColor: "#f5f5f7"}}>
@@ -66,7 +59,7 @@ export default function MyResumePage() {
                                 <UploadFileIcon fontSize={"medium"}/> Import Resume
                             </Button>
                             <PersonalCard/>
-                            <ResumeCard resumes={resumes}/>
+                            <ResumeCard/>
                             <BottomBar/>
                         </Paper>
                     </Box>

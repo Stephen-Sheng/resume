@@ -10,6 +10,7 @@ import JobItemDetail from "../JobItemDetail";
 import SearchJobPage from "../SearchJobPage";
 import JobTips from "../JobTips";
 import PostDetailPage from "../PostDetailPage";
+import ArticleEditPage from "../ArticleEditPage";
 
 export const routes = mount({
     '/': route({view: <Home/>}),
@@ -37,6 +38,7 @@ export const routes = mount({
         return{
             view:<PostDetailPage postId={id} />
         }
-    })
+    }),
+    '/article-edit':route({view:<ArticleEditPage />})
 
 })

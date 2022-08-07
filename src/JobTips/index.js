@@ -12,7 +12,6 @@ import PropTypes from "prop-types";
 import ArticleBar from "./ArticleBar";
 import SearchBar from "./SearchBar";
 import {useInput} from "react-hookedup";
-import {Link} from "react-navi";
 import {Empty} from "antd";
 
 
@@ -48,6 +47,7 @@ export default function JobTips() {
     const [jobItemPageApi, setJobItemPageApi] = useState(1);
     const [searchItemPageApi, setSearchItemPageApi] = useState(1);
     const [isSearch,setIsSearch] = useState(false);
+    const [deleteTrigger,setDeleteTrigger] = useState(false);
 
     const [postsList, getPostsList] = useResource(() => ({
         url: `getPostsList/${jobItemPageApi}`,
@@ -60,6 +60,7 @@ export default function JobTips() {
     }))
 
     const handleChange = (event, newValue) => {
+        console.log(newValue)
         setValue(newValue);
     };
 
@@ -71,7 +72,7 @@ export default function JobTips() {
             setIsSearch(true)
         }
     }
-    useEffect(() => getPostsList(), [getPostsList])
+    useEffect(() => getPostsList(), [getPostsList,jobItemPageApi,deleteTrigger])
 
     return (
         <React.Fragment>
@@ -172,9 +173,9 @@ export default function JobTips() {
                         }}
                         style={{paddingBottom: "20px", backgroundColor: "white", borderRadius: "13px"}}
                     >
-                        <Grid container spacing={2} style={{height: "fit-content"}}>
+                        <Grid container spacing={2} style={{height: "fit-content",alignItems:"center"}}>
                             <SearchBar searchContent={searchContent} handleSearch={handleSearch} />
-                            <ArticleBar/>
+                            <ArticleBar deleteTrigger={deleteTrigger} setDeleteTrigger={setDeleteTrigger}/>
 
                         </Grid>
                     </Box>

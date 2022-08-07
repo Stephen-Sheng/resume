@@ -1,3 +1,4 @@
+
 export function deepCopy(aObject) {
     // Prevent undefined objects
     // if (!aObject) return aObject;
@@ -9,7 +10,7 @@ export function deepCopy(aObject) {
 
         // Prevent self-references to parent object
         // if (Object.is(aObject[key], aObject)) continue;
-        if(key === 'time') continue
+        if (key === 'time') continue
         value = aObject[key];
 
         bObject[key] = (typeof value === "object") ? deepCopy(value) : value;

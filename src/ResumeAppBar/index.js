@@ -17,15 +17,15 @@ import {UserContext} from "../context";
 import {DownloadLink} from "../ResumeTemplate";
 import EditIcon from '@mui/icons-material/Edit';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import { Modal } from 'antd';
+import {Modal} from 'antd';
 import TextField from "@mui/material/TextField";
 import {useInput} from "react-hookedup";
-
+import {useRequest} from "react-request-hook";
 
 
 const ResumeAppBar = (props) => {
 
-    const {profile,resumeName,setResumeName} = props
+    const {profile, resumeName, setResumeName} = props
     const [anchorElNav, setAnchorElNav] = useState(null);
     const [anchorElUser, setAnchorElUser] = useState(null);
     const navigation = useNavigation()
@@ -33,6 +33,49 @@ const ResumeAppBar = (props) => {
     const {user, userDispatch} = useContext(UserContext);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const resumeInput = useInput("")
+
+    const [, sendSaveResume] = useRequest((data) => ({
+        url: 'insert-resume',
+        method: "POST",
+        data
+    }))
+
+    const handleUploadResume = async () => {
+        const {
+            photoUrl,
+            userName,
+            email,
+            workLocation,
+            phoneNum,
+            eduInfo,
+            orgInfo,
+            projectInfo,
+            profSkills,
+            otherSkill
+        } = profile
+        const data = {
+            userid:user.id,
+            resumename:resumeName,
+            eduinfo: JSON.stringify(eduInfo),
+            photourl:photoUrl,
+            username: userName,
+            email,
+            worklocation: workLocation,
+            phonenum: phoneNum,
+            orginfo: JSON.stringify(orgInfo),
+            projectinfo:JSON.stringify(projectInfo),
+            profskills:profSkills,
+            otherskills:otherSkill
+        }
+
+        const {ready} = sendSaveResume(data)
+        try{
+            const response = await ready()
+            console.log(response)
+        }catch (e) {
+            console.log(e)
+        }
+    }
 
 
     const showModal = () => {
@@ -108,11 +151,13 @@ const ResumeAppBar = (props) => {
         <Container maxWidth="xl">
 
             <Toolbar disableGutters>
-                <Button variant="text" startIcon={<ChevronLeftIcon/>} style={{color: "white"}} onClick={()=>navigation.goBack()}>
+                <Button variant="text" startIcon={<ChevronLeftIcon/>} style={{color: "white"}}
+                        onClick={() => navigation.goBack()}>
                     Back
                 </Button>
-                <Button variant="text" startIcon={<EditIcon/>} style={{color: "white",marginLeft:"1%"}} onClick={showModal}>
-                    {resumeName.length === 0? "Edit name":resumeName}
+                <Button variant="text" startIcon={<EditIcon/>} style={{color: "white", marginLeft: "1%"}}
+                        onClick={showModal}>
+                    {resumeName.length === 0 ? "Edit name" : resumeName}
                 </Button>
                 <Modal title="Edit Resume Name" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
                     <TextField {...resumeInput.bindToInput} id="standard-basic" label="Name" variant="standard"/>
@@ -182,7 +227,7 @@ const ResumeAppBar = (props) => {
                         height: "150%",
                         fontWeight: "550",
                         marginRight: "5em"
-                    }}>
+                    }} onClick={handleUploadResume}>
                         <DownloadLink profile={profile}/>
                     </Button>
                     <Tooltip title="Open settings">

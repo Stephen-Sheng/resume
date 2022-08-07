@@ -6,27 +6,34 @@ import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import IconButton from "@mui/material/IconButton";
-import MenuItem from "@mui/material/MenuItem";
-import Menu from "@mui/material/Menu";
-import ListItemText from '@mui/material/ListItemText';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import EditIcon from '@mui/icons-material/Edit';
-import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import DeleteIcon from '@mui/icons-material/Delete';
+import ResumeMenu from "./ResumeMenu";
+import {useInput} from "react-hookedup";
+import {useContext, useEffect, useState} from "react";
+import {useRequest, useResource} from "react-request-hook";
+import {UserContext} from "../context";
 
-export default function ResumeCard(props) {
-    const resumes = props.resumes
+export default function ResumeCard() {
+    // const resumes = props.resumes
+    const {user} = useContext(UserContext);
+    const [dialogOpen, setDialogOpen] = React.useState(false);
+    const [resumes, getResumes] = useResource((userId) => ({
+        url: `/get-resumes/${userId}`,
+        method: 'GET',
+    }));
+    const [, sendDeleteResume] = useRequest((id) => ({
+        url: `/deleteResume/${id}`,
+        method: "GET"
+    }))
 
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const open = Boolean(anchorEl);
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
+    const handleDialogClickOpen = () => {
+        setDialogOpen(true);
     };
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
+    const newResumeName = useInput("")
+    const [finalName, setFinalName] = useState("")
+    const [deleteUpdateTrigger, setDeleteUpdateTrigger] = useState(true)
+
+    useEffect(() => getResumes(user.id), [user.id, getResumes, finalName, deleteUpdateTrigger])
+
 
     return (
         <Box
@@ -59,7 +66,9 @@ export default function ResumeCard(props) {
                             {resumes.data.data.map((value, index) => {
                                 return (
                                     <Grid item xs={12} key={index}>
-                                        <Card elevation={0} sx={{display: 'flex'}} style={{width:333, height: 74,border:"1px solid #ececec"}} component="span">
+                                        <Card elevation={0} sx={{display: 'flex'}}
+                                              style={{width: 333, height: 74, border: "1px solid #ececec"}}
+                                              component="span">
                                             <CardMedia
                                                 component="img"
                                                 sx={{width: 34, height: 42}}
@@ -67,60 +76,29 @@ export default function ResumeCard(props) {
                                                 alt="Live from space album cover"
                                                 style={{margin: "10px"}}
                                             />
-                                                <CardContent sx={{flex: '1 0 auto'}}>
-                                                    <Grid container spacing={0}>
-                                                        <Grid item xs={10}>
-                                                            <Typography component="div" variant="h8" style={{fontSize:"14px",fontWeight:"500",color:"#404040"}}>
-                                                                {value.resumeName}
-                                                            </Typography>
-                                                        </Grid>
-                                                        <Grid item xs={2} style={{textAlign:"right", padding:"0px"}}>
-                                                            <IconButton aria-label="more" size="large" style={{padding:"0px"}}
-                                                                        id="basic-button"
-                                                                        aria-controls={open ? 'basic-menu' : undefined}
-                                                                        aria-haspopup="true"
-                                                                        aria-expanded={open ? 'true' : undefined}
-                                                                        onClick={handleClick}
-                                                            >
-                                                                <MoreHorizIcon fontSize="inherit"/>
-                                                            </IconButton>
-                                                            <Menu
-                                                                id="basic-menu"
-                                                                anchorEl={anchorEl}
-                                                                open={open}
-                                                                onClose={handleClose}
-                                                                MenuListProps={{
-                                                                    'aria-labelledby': 'basic-button',
-                                                                }}
-                                                            >
-                                                                <MenuItem onClick={handleClose}>
-                                                                    <ListItemIcon>
-                                                                        <EditIcon fontSize="small" />
-                                                                    </ListItemIcon>
-                                                                    <ListItemText>
-                                                                        Edit name
-                                                                    </ListItemText>
-                                                                </MenuItem>
-                                                                <MenuItem onClick={handleClose}>
-                                                                    <ListItemIcon>
-                                                                        <FileDownloadIcon fontSize="small" />
-                                                                    </ListItemIcon>
-                                                                    <ListItemText>
-                                                                        Download resume
-                                                                    </ListItemText>
-                                                                </MenuItem>
-                                                                <MenuItem onClick={handleClose}>
-                                                                    <ListItemIcon>
-                                                                        <DeleteIcon fontSize="small" />
-                                                                    </ListItemIcon>
-                                                                    <ListItemText>
-                                                                        Delete resume
-                                                                    </ListItemText>
-                                                                </MenuItem>
-                                                            </Menu>
-                                                        </Grid>
+                                            <CardContent sx={{flex: '1 0 auto'}}>
+                                                <Grid container spacing={0}>
+                                                    <Grid item xs={10}>
+                                                        <Typography component="div" variant="h8" style={{
+                                                            fontSize: "14px",
+                                                            fontWeight: "500",
+                                                            color: "#404040"
+                                                        }}>
+                                                            {value.resumeName}
+                                                        </Typography>
                                                     </Grid>
-                                                </CardContent>
+                                                    <Grid item xs={2} style={{textAlign: "right", padding: "0px"}}>
+                                                        <ResumeMenu dialogOpen={dialogOpen} value={value}
+                                                                    handleDialogClickOpen={handleDialogClickOpen}
+                                                                    setDialogOpen={setDialogOpen}
+                                                                    newResumeName={newResumeName}
+                                                                    setFinalName={setFinalName}
+                                                                    sendDeleteResume={sendDeleteResume}
+                                                                    deleteUpdateTrigger={deleteUpdateTrigger}
+                                                                    setDeleteUpdateTrigger={setDeleteUpdateTrigger}/>
+                                                    </Grid>
+                                                </Grid>
+                                            </CardContent>
                                         </Card>
                                     </Grid>
                                 )

@@ -3,6 +3,12 @@ import {Page, Text, Document, PDFDownloadLink, View, Image} from '@react-pdf/ren
 import Html from 'react-pdf-html';
 import 'react-quill/dist/quill.snow.css';
 import {styles, stylesheet} from "./utils";
+import moment from "moment";
+import MenuItem from "@mui/material/MenuItem";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
+
 
 // Create Document Component
 export const ResumeTemplate = ({profile}) => {
@@ -37,10 +43,15 @@ export const ResumeTemplate = ({profile}) => {
                                     <Text style={styles.topicName}>{value.univName}</Text>
                                 </View>
                                 <View style={{flex: 1}}/>
-                                <View style={{flex: 1}}>
-                                    <Text
-                                        style={styles.time}>{value.time[0].format("YYYY/MM") + " - " + value.time[1].format("YYYY/MM")}</Text>
-                                </View>
+                                {typeof value.time[0] === 'string' || value.time[0] instanceof String ?
+                                    <View style={{flex: 1}}>
+                                        <Text
+                                            style={styles.time}>{moment(value.time[0]).format("YYYY/MM") + " - " + moment(value.time[1]).format("YYYY/MM")}</Text>
+                                    </View> :
+                                    <View style={{flex: 1}}>
+                                        <Text
+                                            style={styles.time}>{value.time[0].format("YYYY/MM") + " - " + value.time[1].format("YYYY/MM")}</Text>
+                                    </View>}
                             </View>
                             <Text style={styles.text}>
                                 <Text>{value.degree}</Text>
@@ -62,10 +73,15 @@ export const ResumeTemplate = ({profile}) => {
                                     <Text style={styles.topicName}>{value.projectName}</Text>
                                 </View>
                                 <View style={{flex: 1}}/>
-                                <View style={{flex: 1}}>
-                                    <Text
-                                        style={styles.time}>{value.time[0].format("YYYY/MM") + " - " + value.time[1].format("YYYY/MM")}</Text>
-                                </View>
+                                {typeof value.time[0] === 'string' || value.time[0] instanceof String ?
+                                    <View style={{flex: 1}}>
+                                        <Text
+                                            style={styles.time}>{moment(value.time[0]).format("YYYY/MM") + " - " + moment(value.time[1]).format("YYYY/MM")}</Text>
+                                    </View> :
+                                    <View style={{flex: 1}}>
+                                        <Text
+                                            style={styles.time}>{value.time[0].format("YYYY/MM") + " - " + value.time[1].format("YYYY/MM")}</Text>
+                                    </View>}
                             </View>
                             <Text style={styles.text}>
                                 <Text>{value.role}</Text>
@@ -87,10 +103,15 @@ export const ResumeTemplate = ({profile}) => {
                                     <Text style={styles.topicName}>{value.orgName}</Text>
                                 </View>
                                 <View style={{flex: 1}}/>
-                                <View style={{flex: 1}}>
-                                    <Text
-                                        style={styles.time}>{value.time[0].format("YYYY/MM") + " - " + value.time[1].format("YYYY/MM")}</Text>
-                                </View>
+                                {typeof value.time[0] === 'string' || value.time[0] instanceof String ?
+                                    <View style={{flex: 1}}>
+                                        <Text
+                                            style={styles.time}>{moment(value.time[0]).format("YYYY/MM") + " - " + moment(value.time[1]).format("YYYY/MM")}</Text>
+                                    </View> :
+                                    <View style={{flex: 1}}>
+                                        <Text
+                                            style={styles.time}>{value.time[0].format("YYYY/MM") + " - " + value.time[1].format("YYYY/MM")}</Text>
+                                    </View>}
                             </View>
                             <Text style={styles.text}>
                                 <Text>{value.role}</Text>
@@ -137,6 +158,30 @@ export const DownloadLink = (props) => {
         <PDFDownloadLink document={<ResumeTemplate profile={profile}/>} fileName="resume.pdf"
                          style={{textDecoration: "none", color: "white"}}>
             {({loading}) => (loading ? 'Download' : 'Download')}
+        </PDFDownloadLink>
+    )
+}
+
+export const HomePageDownloadLink = (props) => {
+    const profile = props.profile
+    return (
+        <PDFDownloadLink document={<ResumeTemplate profile={profile}/>} fileName={profile.resumeName + ".pdf"}
+                         style={{textDecoration: "none", color: "black"}}>
+            {({loading}) => (loading ? <MenuItem>
+                <ListItemIcon>
+                    <FileDownloadIcon fontSize="small"/>
+                </ListItemIcon>
+                <ListItemText>
+                    Loading...
+                </ListItemText>
+            </MenuItem> : <MenuItem>
+                <ListItemIcon>
+                    <FileDownloadIcon fontSize="small"/>
+                </ListItemIcon>
+                <ListItemText>
+                    Download Resume
+                </ListItemText>
+            </MenuItem>)}
         </PDFDownloadLink>
     )
 }

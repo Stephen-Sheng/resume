@@ -12,7 +12,7 @@ import {useNavigation} from "react-navi";
 
 export default function PostList(props) {
 
-    const {id,summary, postTitle, postDate, category,cover} = props
+    const {id,summary, postTitle, postDate,cover} = props
     const navigation = useNavigation();
     function handleClickPost() {
         navigation.navigate(`/post/${id}`)

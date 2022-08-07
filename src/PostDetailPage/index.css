@@ -13,3 +13,27 @@
 .react-responsive-modal-modal h2, .react-responsive-modal-modal p{
     margin-bottom: 10px !important;
 }
+
+.replyIcon{
+    position: relative !important;
+}
+
+.ql-font-georgia{
+    font-family: Georgia;
+}
+.ql-font-arial{
+    font-family: Arial;
+}
+.ql-font-helvetica{
+    font-family: Helvetica;
+}
+.ql-font-lucida{
+    font-family: "Lucida Grande";
+
+}
+.ql-font-comic-sans{
+    font-family: "Comic Sans MS";
+}
+.ql-font-courier-new{
+    font-family: "Courier New";
+}
