@@ -21,11 +21,13 @@ import {Modal} from 'antd';
 import TextField from "@mui/material/TextField";
 import {useInput} from "react-hookedup";
 import {useRequest} from "react-request-hook";
+import {degreeConvert} from "../utils";
+import moment from "moment";
 
 
 const ResumeAppBar = (props) => {
 
-    const {profile, resumeName, setResumeName} = props
+    const {profile, resumeName, setResumeName,resumeId,bestDegree,bestUniv} = props
     const [anchorElNav, setAnchorElNav] = useState(null);
     const [anchorElUser, setAnchorElUser] = useState(null);
     const navigation = useNavigation()
@@ -39,8 +41,39 @@ const ResumeAppBar = (props) => {
         method: "POST",
         data
     }))
+    const [,sendUpdateResume] = useRequest((data)=>({
+        url:'updateResume',
+        method:"POST",
+        data
+    }))
+
+    const [,sendUpdate] = useRequest((data)=>({
+        url:'update',
+        method:"POST",
+        data
+    }))
+
 
     const handleUploadResume = async () => {
+        const profileData= {id:user.id,degree:bestDegree,university: bestUniv,lastupdate:moment().format("YYYY-MM-DD")}
+        if (user.degree){
+            if(degreeConvert(bestDegree)>degreeConvert(user.degree)){
+                const {ready} = sendUpdate(profileData)
+                try {
+                    const response = await ready()
+                    console.log(response)
+                }catch (e) {
+                    console.log(e)
+                }
+            }
+        }else{
+            const {ready} = sendUpdate(profileData)
+            try {
+                const response = await ready()
+            }catch (e) {
+                console.log(e)
+            }
+        }
         const {
             photoUrl,
             userName,
@@ -67,13 +100,23 @@ const ResumeAppBar = (props) => {
             profskills:profSkills,
             otherskills:otherSkill
         }
-
-        const {ready} = sendSaveResume(data)
-        try{
-            const response = await ready()
-            console.log(response)
-        }catch (e) {
-            console.log(e)
+        if(resumeId){
+            data.id=resumeId
+            const {ready} = sendUpdateResume(data)
+            try{
+                const response = await ready()
+                console.log(response)
+            }catch (e) {
+                console.log(e)
+            }
+        }else{
+            const {ready} = sendSaveResume(data)
+            try{
+                const response = await ready()
+                console.log(response)
+            }catch (e) {
+                console.log(e)
+            }
         }
     }
 
@@ -212,23 +255,26 @@ const ResumeAppBar = (props) => {
                     >
                     </Menu>
                 </Box>
-                {/*<Button variant="contained" onClick={printDocument} style={{*/}
-                {/*    borderRadius: "40px",*/}
-                {/*    background: "#ff3d3d",*/}
-                {/*    height: "150%",*/}
-                {/*    fontWeight: "550",*/}
-                {/*    marginRight: "5em"*/}
-                {/*}}> Download </Button>*/}
 
-                {user.id && <Box sx={{flexGrow: 0}} style={{marginLeft: "60rem"}}>
+                {user.id && <Box sx={{flexGrow: 0}} style={{marginLeft: "30rem"}}>
                     <Button variant="contained" style={{
                         borderRadius: "40px",
                         background: "#ff3d3d",
                         height: "150%",
                         fontWeight: "550",
                         marginRight: "5em"
-                    }} onClick={handleUploadResume}>
+                    }}>
                         <DownloadLink profile={profile}/>
+                    </Button>
+                    <Button variant="outlined" style={{
+                        borderRadius: "40px",
+                        borderColor: "#ff3d3d",
+                        color:"white",
+                        height: "150%",
+                        fontWeight: "550",
+                        marginRight: "5em"
+                    }} onClick={handleUploadResume}>
+                        Upload to server
                     </Button>
                     <Tooltip title="Open settings">
                         <>

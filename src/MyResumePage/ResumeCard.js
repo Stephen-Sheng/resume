@@ -11,9 +11,9 @@ import {useInput} from "react-hookedup";
 import {useContext, useEffect, useState} from "react";
 import {useRequest, useResource} from "react-request-hook";
 import {UserContext} from "../context";
+import {useNavigation} from "react-navi";
 
 export default function ResumeCard() {
-    // const resumes = props.resumes
     const {user} = useContext(UserContext);
     const [dialogOpen, setDialogOpen] = React.useState(false);
     const [resumes, getResumes] = useResource((userId) => ({
@@ -25,7 +25,8 @@ export default function ResumeCard() {
         method: "GET"
     }))
 
-    const handleDialogClickOpen = () => {
+    const handleDialogClickOpen = (e) => {
+        e.stopPropagation()
         setDialogOpen(true);
     };
     const newResumeName = useInput("")

@@ -9,6 +9,8 @@ import ListItemText from "@mui/material/ListItemText";
 import EditNameDialog from "./EditNameDialog";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {HomePageDownloadLink} from "../ResumeTemplate";
+import {useNavigation} from "react-navi";
+import FormatPaintIcon from '@mui/icons-material/FormatPaint';
 
 export default function ResumeMenu({
                                        value,
@@ -50,15 +52,19 @@ export default function ResumeMenu({
         userName,
         email
     }
+    const navigation = useNavigation()
 
     const handleClick = (event) => {
+        event.stopPropagation()
         setAnchorEl(event.currentTarget);
     };
-    const handleClose = () => {
+    const handleClose = (e) => {
+        e.stopPropagation()
         setAnchorEl(null);
     };
 
-    const handleDeleteResume = async () => {
+    const handleDeleteResume = async (e) => {
+        e.stopPropagation()
         const {ready} = sendDeleteResume(value.id)
         try {
             const response = await ready();
@@ -99,6 +105,14 @@ export default function ResumeMenu({
                 </MenuItem>
                 <EditNameDialog id={value.id} dialogOpen={dialogOpen} setDialogOpen={setDialogOpen}
                                 newResumeName={newResumeName} setFinalName={setFinalName}/>
+                <MenuItem onClick={()=>navigation.navigate(`/cv/editor/${value.id}`)}>
+                    <ListItemIcon>
+                        <FormatPaintIcon fontSize="small"/>
+                    </ListItemIcon>
+                    <ListItemText>
+                        Edit resume
+                    </ListItemText>
+                </MenuItem>
                 <HomePageDownloadLink profile={jsonValue}/>
                 <MenuItem onClick={handleDeleteResume}>
                     <ListItemIcon>
@@ -108,6 +122,7 @@ export default function ResumeMenu({
                         Delete resume
                     </ListItemText>
                 </MenuItem>
+
             </Menu>
         </>
     );

@@ -1,9 +1,10 @@
 import EditBackBar from "./EditBackBar";
 import { Form, Input, DatePicker, Select} from 'antd';
-import React, {useState} from 'react';
+import React, { useState} from 'react';
 import './BasicInfoEdit.css'
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import {degreeConvert} from "../utils";
 const {RangePicker} = DatePicker;
 const {Option} = Select;
 const options = ["Senior High School", "High School", "Diploma", "Bachelor", "Master", "Doctor", "MBA"]
@@ -13,14 +14,22 @@ const monthFormat = 'YYYY/MM';
 export default function EduInfoEdit(props) {
 
     const [value, setValue] = useState('');
-    const {eduInfo, setEduInfo, setEditStatus, eduIndex} = props
-
+    const {eduInfo, setEduInfo, setEditStatus, eduIndex,bestDegree,setBestDegree,setBestUniv} = props
     const [form] = Form.useForm();
     const [formLayout] = useState('vertical');
 
 
     const onFinish = (values) => {
         console.log(values)
+        if(bestDegree.length===0){
+            setBestDegree(values.degree)
+            setBestUniv(values.univName)
+        }else{
+            if(degreeConvert(values.degree)>degreeConvert(bestDegree)){
+                setBestDegree(values.degree)
+                setBestUniv(values.univName)
+            }
+        }
         if (eduInfo.length === 0) {
             const newEduInfo = eduInfo
             newEduInfo.push(values)

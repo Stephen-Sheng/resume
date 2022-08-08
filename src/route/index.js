@@ -18,6 +18,12 @@ export const routes = mount({
     '/sign-up': route({view: <SignUp/>}),
     '/cv': route({view: <MyResumePage/>}),
     '/cv/editor': route({view: <ResumeEditor/>}),
+    '/cv/editor/:id':route( req=>{
+        let id = req.params.id
+        return{
+            view:<ResumeEditor resumeId={id}/>
+        }
+    }),
     '/cv/template': route({view: <ResumeTemplate/>}),
     '/job/:id': route(async req => {
         let id = req.params.id

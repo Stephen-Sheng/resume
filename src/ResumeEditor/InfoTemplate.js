@@ -11,6 +11,7 @@ import IconButton from "@mui/material/IconButton";
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import {deepCopy} from "../utils";
+import moment from "moment";
 
 const Item = styled("div")(({theme}) => ({
     ...theme.typography.body2,
@@ -92,7 +93,7 @@ export default function InfoTemplate(props) {
                         paddingTop: "0px",
                         paddingBottom: "0px"
                     }}>
-                        {typeof time[0] === 'string' || time[0] instanceof String ? time[0] + ' - ' + time[1] : time[0].format("YYYY/MM") + " - " + time[1].format("YYYY/MM")}
+                        {typeof time[0] === 'string' || time[0] instanceof String ? moment(time[0]).format("YYYY/MM") + " - " + moment(time[1]).format("YYYY/MM") : time[0].format("YYYY/MM") + " - " + time[1].format("YYYY/MM")}
                     </Item>
                 </Grid>
             </Grid>

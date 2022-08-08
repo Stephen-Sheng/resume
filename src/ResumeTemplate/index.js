@@ -58,7 +58,7 @@ export const ResumeTemplate = ({profile}) => {
                                 <Space num={0.5}/>
                                 <Text>{value.programName}</Text>
                             </Text>
-                            <Html stylesheet={stylesheet}>{value.description}</Html>
+                            {value.description!=="<p><br></p>"&& <Html stylesheet={stylesheet}>{value.description}</Html>}
                         </View>
                     )
                 })}

@@ -9,11 +9,8 @@ import Pagination from "@mui/material/Pagination";
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import Divider from '@mui/material/Divider';
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogActions from "@mui/material/DialogActions";
+
+import {MyDialog} from "../utils";
 
 
 
@@ -99,27 +96,7 @@ export default function ArticleBar({deleteTrigger,setDeleteTrigger}) {
                                     <IconButton aria-label="delete" onClick={handleClickOpen}>
                                         <DeleteIcon />
                                     </IconButton>
-                                    <Dialog
-                                        open={open}
-                                        onClose={handleClose}
-                                        aria-labelledby="alert-dialog-title"
-                                        aria-describedby="alert-dialog-description"
-                                    >
-                                        <DialogTitle id="alert-dialog-title">
-                                            {"Alert"}
-                                        </DialogTitle>
-                                        <DialogContent>
-                                            <DialogContentText id="alert-dialog-description">
-                                                Are you sure you want to delete your article?
-                                            </DialogContentText>
-                                        </DialogContent>
-                                        <DialogActions>
-                                            <Button style={{color: "#f64"}} onClick={handleClose}>Cancel</Button>
-                                            <Button style={{color: "#f64"}} onClick={()=>handleDelete(value.id)} autoFocus>
-                                                Delete
-                                            </Button>
-                                        </DialogActions>
-                                    </Dialog>
+                                    <MyDialog open={open} handleClose={handleClose} text={"Are you sure you want to delete your article?"} btnText={"Delete"} />
                                 </Grid>
                                 <Grid item xs={12} style={{paddingTop:"0px"}}>
                                     <Divider />

@@ -61,7 +61,8 @@ export default function SuggestionBar(props) {
         orgInfo,
         profSkills,
         otherSkill,
-        resumeName
+        resumeName,
+        loadTrigger
     } = props.resumeInfo
 
     const [basicOpen, setBasicOpen] = React.useState(false);
@@ -117,7 +118,7 @@ export default function SuggestionBar(props) {
         setOtherCount(count)
         setTotalCount(total)
 
-    }, [eduInfo.length, email.length, orgInfo.length, otherSkill.length, phoneNum.length, profSkills.length, projectInfo.length, resumeName.length, userName.length])
+    }, [eduInfo.length, email.length, orgInfo.length, otherSkill.length, phoneNum.length, profSkills.length, projectInfo.length, resumeName.length, userName.length,loadTrigger])
 
     return (
         <>
