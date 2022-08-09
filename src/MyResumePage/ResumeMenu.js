@@ -17,7 +17,6 @@ export default function ResumeMenu({
                                        handleDialogClickOpen,
                                        dialogOpen,
                                        setDialogOpen,
-                                       newResumeName,
                                        setFinalName,
                                        sendDeleteResume,
                                        deleteUpdateTrigger,
@@ -103,8 +102,8 @@ export default function ResumeMenu({
                         Edit name
                     </ListItemText>
                 </MenuItem>
-                <EditNameDialog id={value.id} dialogOpen={dialogOpen} setDialogOpen={setDialogOpen}
-                                newResumeName={newResumeName} setFinalName={setFinalName}/>
+                <EditNameDialog resumeName={value.resumeName} id={value.id} dialogOpen={dialogOpen} setDialogOpen={setDialogOpen}
+                                setFinalName={setFinalName}/>
                 <MenuItem onClick={()=>navigation.navigate(`/cv/editor/${value.id}`)}>
                     <ListItemIcon>
                         <FormatPaintIcon fontSize="small"/>

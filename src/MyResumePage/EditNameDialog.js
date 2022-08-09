@@ -7,21 +7,13 @@ import Dialog from "@mui/material/Dialog";
 import * as React from "react";
 import {OrangeBorderTextField} from "../SearchJobPage";
 import {useRequest} from "react-request-hook";
-import Alert from "@mui/material/Alert";
-import Snackbar from "@mui/material/Snackbar";
+import {useInput} from "react-hookedup";
+import {message} from "antd";
 
 
-export default function EditNameDialog({id,dialogOpen,setDialogOpen,newResumeName,setFinalName}) {
+export default function EditNameDialog({id,dialogOpen,setDialogOpen,setFinalName, resumeName}) {
 
-    const [snackOpen, setSnackOpen] = React.useState(false);
-    const handleSnackClickOpen = () => {
-        setSnackOpen(true);
-    };
-    const [snackStatus,setSnackStatus] = React.useState({level:"success",msg:"Update Successfully!"});
-
-    const handleSnackClose = () => {
-        setSnackOpen(false);
-    };
+    const newResumeName = useInput(resumeName)
 
     const handleClose = () => {
         setDialogOpen(false);
@@ -38,27 +30,18 @@ export default function EditNameDialog({id,dialogOpen,setDialogOpen,newResumeNam
         try {
             const response = await ready()
             setFinalName(newResumeName.value)
-            setSnackStatus({level:"success",msg:"Update Successfully!"})
-            handleSnackClickOpen()
+            message.success(`Update successfully!`);
             handleClose()
             console.log(response)
         } catch (e) {
             console.log(e)
-            setSnackStatus({level:"error",msg:"Submit error!"})
+            message.error(`Submit error`);
 
         }
     }
 
     return (
         <>
-            <Snackbar
-                autoHideDuration={6000}
-                anchorOrigin={{vertical:'top',horizontal:'center'}}
-                open={snackOpen}
-                onClose={handleSnackClose}
-            >
-                <Alert severity={snackStatus.level}>{snackStatus.msg}</Alert>
-            </Snackbar>
             <Dialog open={dialogOpen} onClose={handleClose}>
                 <DialogTitle>Resume Name</DialogTitle>
                 <DialogContent>

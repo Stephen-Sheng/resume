@@ -32,10 +32,6 @@ export default function ArticleBar({deleteTrigger,setDeleteTrigger}) {
         setOpen(true);
     };
 
-    const handleClose = () => {
-        setOpen(false);
-    };
-
     useEffect(() => getArticleList(), [getArticleList, user.id, postItemPageApi,deleteTrigger])
 
     async function handleDelete(id) {
@@ -96,7 +92,7 @@ export default function ArticleBar({deleteTrigger,setDeleteTrigger}) {
                                     <IconButton aria-label="delete" onClick={handleClickOpen}>
                                         <DeleteIcon />
                                     </IconButton>
-                                    <MyDialog open={open} handleClose={handleClose} text={"Are you sure you want to delete your article?"} btnText={"Delete"} />
+                                    <MyDialog open={open} handleClose={handleDelete(value.id)} text={"Are you sure you want to delete your article?"} btnText={"Delete"} />
                                 </Grid>
                                 <Grid item xs={12} style={{paddingTop:"0px"}}>
                                     <Divider />

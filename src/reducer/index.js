@@ -12,6 +12,8 @@ export function userReducer(state, action) {
             }
         case 'LOGOUT':
             return {username: null, email: null, id: null, university: null, degree: null, photo: null,lastupdate:null}
+        case 'UPDATE':
+            return {...state,photo:action.photo,degree: action.degree,lastupdate: action.lastupdate,university: action.university}
         default:
             throw new Error()
     }

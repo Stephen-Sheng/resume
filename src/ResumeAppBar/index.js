@@ -17,20 +17,21 @@ import {UserContext} from "../context";
 import {DownloadLink} from "../ResumeTemplate";
 import EditIcon from '@mui/icons-material/Edit';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import {Modal} from 'antd';
+import {message, Modal} from 'antd';
 import TextField from "@mui/material/TextField";
 import {useInput} from "react-hookedup";
 import {useRequest} from "react-request-hook";
-import {degreeConvert} from "../utils";
+import {degreeConvert, MyDialog} from "../utils";
 import moment from "moment";
 
 
 const ResumeAppBar = (props) => {
 
-    const {profile, resumeName, setResumeName,resumeId,bestDegree,bestUniv} = props
+    const {profile, resumeName, setResumeName, resumeId, bestDegree, bestUniv} = props
     const [anchorElNav, setAnchorElNav] = useState(null);
     const [anchorElUser, setAnchorElUser] = useState(null);
     const navigation = useNavigation()
+    const [open,setOpen] = useState(false)
     // const printDocument = props.printDocument
     const {user, userDispatch} = useContext(UserContext);
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -41,39 +42,24 @@ const ResumeAppBar = (props) => {
         method: "POST",
         data
     }))
-    const [,sendUpdateResume] = useRequest((data)=>({
-        url:'updateResume',
-        method:"POST",
+    const [, sendUpdateResume] = useRequest((data) => ({
+        url: 'updateResume',
+        method: "POST",
         data
     }))
 
-    const [,sendUpdate] = useRequest((data)=>({
-        url:'update',
-        method:"POST",
+    const [, sendUpdate] = useRequest((data) => ({
+        url: 'update',
+        method: "POST",
         data
     }))
+
+    const handleClose = () => {
+        setOpen(false)
+    }
 
 
     const handleUploadResume = async () => {
-        const profileData= {id:user.id,degree:bestDegree,university: bestUniv,lastupdate:moment().format("YYYY-MM-DD")}
-        if (user.degree){
-            if(degreeConvert(bestDegree)>degreeConvert(user.degree)){
-                const {ready} = sendUpdate(profileData)
-                try {
-                    const response = await ready()
-                    console.log(response)
-                }catch (e) {
-                    console.log(e)
-                }
-            }
-        }else{
-            const {ready} = sendUpdate(profileData)
-            try {
-                const response = await ready()
-            }catch (e) {
-                console.log(e)
-            }
-        }
         const {
             photoUrl,
             userName,
@@ -86,38 +72,91 @@ const ResumeAppBar = (props) => {
             profSkills,
             otherSkill
         } = profile
-        const data = {
-            userid:user.id,
-            resumename:resumeName,
-            eduinfo: JSON.stringify(eduInfo),
-            photourl:photoUrl,
-            username: userName,
-            email,
-            worklocation: workLocation,
-            phonenum: phoneNum,
-            orginfo: JSON.stringify(orgInfo),
-            projectinfo:JSON.stringify(projectInfo),
-            profskills:profSkills,
-            otherskills:otherSkill
+        const profileData = {
+            id: user.id,
+            degree: bestDegree,
+            university: bestUniv,
+            photo:photoUrl,
+            lastupdate: moment().format("YYYY-MM-DD")
         }
-        if(resumeId){
-            data.id=resumeId
-            const {ready} = sendUpdateResume(data)
-            try{
+        if (user.degree) {
+            if (degreeConvert(bestDegree) > degreeConvert(user.degree)) {
+                const {ready} = sendUpdate(profileData)
+                try {
+                    const response = await ready()
+                    await userDispatch({
+                        type: "UPDATE",
+                        university: profileData.university,
+                        degree:profileData.degree,
+                        photo:profileData.photo,
+                        lastupdate: profileData.lastupdate
+                    })
+                    console.log(response)
+                } catch (e) {
+                    console.log(e)
+                }
+            }
+        } else {
+            const {ready} = sendUpdate(profileData)
+            try {
                 const response = await ready()
                 console.log(response)
-            }catch (e) {
+                await userDispatch({
+                    type: "UPDATE",
+                    university: profileData.university,
+                    degree:profileData.degree,
+                    photo:profileData.photo,
+                    lastupdate: profileData.lastupdate
+                })
+            } catch (e) {
                 console.log(e)
+            }
+        }
+
+        if (resumeName.length !==0 && photoUrl.length !== 0 && userName.length !== 0 && email.length !== 0 && workLocation.length !== 0 && phoneNum !== 0 && eduInfo.length !== 0 && orgInfo.length !== 0 && projectInfo.length !== 0 && profSkills.length!==0 && otherSkill.length!==0){
+            const data = {
+                userid: user.id,
+                resumename: resumeName,
+                eduinfo: JSON.stringify(eduInfo),
+                photourl: photoUrl,
+                username: userName,
+                email,
+                worklocation: workLocation,
+                phonenum: phoneNum,
+                orginfo: JSON.stringify(orgInfo),
+                projectinfo: JSON.stringify(projectInfo),
+                profskills: profSkills,
+                otherskills: otherSkill
+            }
+            if (resumeId) {
+                data.id = resumeId
+                const {ready} = sendUpdateResume(data)
+                try {
+                    const response = await ready()
+                    message.success(`Update successfully!`);
+                    navigation.navigate('/cv')
+                    console.log(response)
+                } catch (e) {
+                    console.log(e)
+                }
+            } else {
+                const {ready} = sendSaveResume(data)
+                try {
+                    const response = await ready()
+                    message.success(`Upload successfully!`);
+                    navigation.navigate('/cv')
+                    console.log(response)
+                } catch (e) {
+                    message.error(`Upload failed`);
+
+                    console.log(e)
+                }
             }
         }else{
-            const {ready} = sendSaveResume(data)
-            try{
-                const response = await ready()
-                console.log(response)
-            }catch (e) {
-                console.log(e)
-            }
+            setOpen(true)
         }
+
+
     }
 
 
@@ -269,13 +308,14 @@ const ResumeAppBar = (props) => {
                     <Button variant="outlined" style={{
                         borderRadius: "40px",
                         borderColor: "#ff3d3d",
-                        color:"white",
+                        color: "white",
                         height: "150%",
                         fontWeight: "550",
                         marginRight: "5em"
                     }} onClick={handleUploadResume}>
                         Upload to server
                     </Button>
+                    <MyDialog open={open} handleClose={handleClose} text={"Please make sure you have filled in all the contents before uploading"} btnText={"OK"} />
                     <Tooltip title="Open settings">
                         <>
                             <IconButton onClick={handleOpenUserMenu} sx={{p: 0}}

@@ -7,11 +7,9 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
 import ResumeMenu from "./ResumeMenu";
-import {useInput} from "react-hookedup";
 import {useContext, useEffect, useState} from "react";
 import {useRequest, useResource} from "react-request-hook";
 import {UserContext} from "../context";
-import {useNavigation} from "react-navi";
 
 export default function ResumeCard() {
     const {user} = useContext(UserContext);
@@ -29,7 +27,6 @@ export default function ResumeCard() {
         e.stopPropagation()
         setDialogOpen(true);
     };
-    const newResumeName = useInput("")
     const [finalName, setFinalName] = useState("")
     const [deleteUpdateTrigger, setDeleteUpdateTrigger] = useState(true)
 
@@ -92,7 +89,6 @@ export default function ResumeCard() {
                                                         <ResumeMenu dialogOpen={dialogOpen} value={value}
                                                                     handleDialogClickOpen={handleDialogClickOpen}
                                                                     setDialogOpen={setDialogOpen}
-                                                                    newResumeName={newResumeName}
                                                                     setFinalName={setFinalName}
                                                                     sendDeleteResume={sendDeleteResume}
                                                                     deleteUpdateTrigger={deleteUpdateTrigger}

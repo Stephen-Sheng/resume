@@ -52,6 +52,9 @@ export function degreeConvert(degree){
         case options[6]:
             level = 7
             break
+        default:
+            level = 0
+            break
     }
     return level
 }
