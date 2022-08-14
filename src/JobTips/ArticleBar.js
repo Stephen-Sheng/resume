@@ -10,7 +10,11 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import Divider from '@mui/material/Divider';
 
-import {MyDialog} from "../utils";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogActions from "@mui/material/DialogActions";
+import Dialog from "@mui/material/Dialog";
 
 
 
@@ -31,6 +35,9 @@ export default function ArticleBar({deleteTrigger,setDeleteTrigger}) {
     const handleClickOpen = () => {
         setOpen(true);
     };
+    const handleClose = () => {
+        setOpen(false);
+    };
 
     useEffect(() => getArticleList(), [getArticleList, user.id, postItemPageApi,deleteTrigger])
 
@@ -40,7 +47,7 @@ export default function ArticleBar({deleteTrigger,setDeleteTrigger}) {
             const response = await ready()
             message.success(`Delete successfully`);
             setDeleteTrigger(!deleteTrigger)
-
+            setOpen(false)
             console.log(response)
         }catch (e) {
             console.log(e)
@@ -92,7 +99,27 @@ export default function ArticleBar({deleteTrigger,setDeleteTrigger}) {
                                     <IconButton aria-label="delete" onClick={handleClickOpen}>
                                         <DeleteIcon />
                                     </IconButton>
-                                    <MyDialog open={open} handleClose={handleDelete(value.id)} text={"Are you sure you want to delete your article?"} btnText={"Delete"} />
+                                    <Dialog
+                                        open={open}
+                                        onClose={handleClose}
+                                        aria-labelledby="alert-dialog-title"
+                                        aria-describedby="alert-dialog-description"
+                                    >
+                                        <DialogTitle id="alert-dialog-title">
+                                            {"Alert"}
+                                        </DialogTitle>
+                                        <DialogContent>
+                                            <DialogContentText id="alert-dialog-description">
+                                                Are you sure you want to delete your article?
+                                            </DialogContentText>
+                                        </DialogContent>
+                                        <DialogActions>
+                                            <Button style={{color: "#f64"}} onClick={handleClose}>Cancel</Button>
+                                            <Button style={{color: "#f64"}} onClick={()=>handleDelete(value.id)} autoFocus>
+                                                Delete
+                                            </Button>
+                                        </DialogActions>
+                                    </Dialog>
                                 </Grid>
                                 <Grid item xs={12} style={{paddingTop:"0px"}}>
                                     <Divider />

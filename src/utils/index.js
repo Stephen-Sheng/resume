@@ -61,7 +61,7 @@ export function degreeConvert(degree){
 
 export function MyDialog(props){
 
-    const {open,handleClose,text,btnText} = props
+    const {open,handleOk,handleClose,text,btnText} = props
     return(
         <Dialog
             open={open}
@@ -79,7 +79,7 @@ export function MyDialog(props){
             </DialogContent>
             <DialogActions>
                 <Button style={{color: "#f64"}} onClick={handleClose}>Cancel</Button>
-                <Button style={{color: "#f64"}} onClick={handleClose} autoFocus>
+                <Button style={{color: "#f64"}} onClick={()=>handleOk} autoFocus>
                     {btnText}
                 </Button>
             </DialogActions>

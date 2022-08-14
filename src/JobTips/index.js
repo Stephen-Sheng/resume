@@ -124,12 +124,12 @@ export default function JobTips() {
                                                     </React.Fragment>
                                                 )
                                             })}
-                                            <Grid item xs={8} style={{textAlign: "center", marginTop: "30px"}}>
+                                            {postsList.data.data.dataList.length !== 0 ? <Grid item xs={8} style={{textAlign: "center", marginTop: "30px"}}>
                                                 <Pagination count={postsList.data.data.pages}
                                                             page={jobItemPageApi}
                                                             shape="rounded"
                                                             onChange={(e, value) => setJobItemPageApi(value)}/>
-                                            </Grid>
+                                            </Grid>: <div style={{width:"834px",height:"283px",marginTop:"100px"}}><Empty description={false} /></div> }
                                         </>
                                         }
 
@@ -154,7 +154,6 @@ export default function JobTips() {
                                             </Grid>}
                                         </> }
                                     </TabPanel>
-
                                 </Grid>
                             </div>
                         </Box>

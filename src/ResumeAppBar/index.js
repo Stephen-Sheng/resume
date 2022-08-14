@@ -315,7 +315,7 @@ const ResumeAppBar = (props) => {
                     }} onClick={handleUploadResume}>
                         Upload to server
                     </Button>
-                    <MyDialog open={open} handleClose={handleClose} text={"Please make sure you have filled in all the contents before uploading"} btnText={"OK"} />
+                    <MyDialog open={open} handleOK={handleClose} handleClose={handleClose} text={"Please make sure you have filled in all the contents before uploading"} btnText={"OK"} />
                     <Tooltip title="Open settings">
                         <>
                             <IconButton onClick={handleOpenUserMenu} sx={{p: 0}}

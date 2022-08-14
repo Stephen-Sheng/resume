@@ -5,7 +5,7 @@ import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import ResumeAppBar from "../ResumeAppBar";
 import PhotoUpload from "./PhotoUpload";
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import useHover from '@react-hook/hover'
 import Divider from "@mui/material/Divider";
 import InfoTemplate from "./InfoTemplate";
@@ -22,6 +22,8 @@ import OtherInfoEdit from "./OtherInfoEdit";
 import AddButton from "./AddButton";
 import {useRequest} from "react-request-hook";
 import moment from "moment";
+import {UserContext} from "../context";
+import {useNavigation} from "react-navi";
 
 const Item = styled("div")(({theme}) => ({
     ...theme.typography.body2,
@@ -76,6 +78,14 @@ export default function ResumeEditor({resumeId}) {
         method: "GET"
     }))
 
+    const {user} = useContext(UserContext)
+    const navigation = useNavigation();
+    useEffect(()=>{
+        if(!user.id){
+            navigation.navigate('/sign-in')
+        }
+    },[user.id,navigation])
+
     useEffect(() => {
         async function loadResume() {
             if (resumeId) {
@@ -98,10 +108,8 @@ export default function ResumeEditor({resumeId}) {
                 } catch (e) {
                     console.log(e)
                 }
-
             }
         }
-
         loadResume()
     }, [resumeId,sendQueryResume])
 

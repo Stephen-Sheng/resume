@@ -164,9 +164,9 @@ export default function SignInSide() {
                             </Button>
                             <Grid container>
                                 <Grid item xs>
-                                    <NavLink href="/sign-up">
-                                        Forgot password?
-                                    </NavLink>
+                                    {/*<NavLink href="/sign-up">*/}
+                                    {/*    Forgot password?*/}
+                                    {/*</NavLink>*/}
                                 </Grid>
                                 <Grid item>
                                     <NavLink href="/sign-up">
