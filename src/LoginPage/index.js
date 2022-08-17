@@ -1,6 +1,5 @@
 import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -21,6 +20,9 @@ import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import styled from "styled-components";
 import md5 from "md5"
+import LoadingButton from '@mui/lab/LoadingButton';
+
+
 
 const OrangeBorderTextField = styled(TextField)`
   & label.Mui-focused {
@@ -49,6 +51,7 @@ const theme = createTheme();
 
 export default function SignInSide() {
     const email = useInput("")
+    const [loading,setLoading] = useState(false)
     const password = useInput("")
     let navigation = useNavigation()
     const {setSnackOpen, setSnackMsg} = useContext(SnackContext)
@@ -62,10 +65,12 @@ export default function SignInSide() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        setLoading(true)
         const {ready} = createLoginRequest(email.value, password.value);
         try {
             const data = await ready()
             if (data.status === 200) {
+                setLoading(false)
                 setSnackMsg(`Hello, ${data.data.username.split(" ")[0]}`)
                 setSnackOpen(true)
                 await userDispatch({
@@ -153,15 +158,16 @@ export default function SignInSide() {
                                 control={<Checkbox value="remember" color="primary"/>}
                                 label="Remember me"
                             />
-                            <Button
+                            <LoadingButton
                                 type="submit"
+                                loading={loading}
                                 fullWidth
                                 variant="contained"
                                 sx={{mt: 3, mb: 2}}
                                 style={{backgroundColor:"#f64"}}
                             >
                                 Sign In
-                            </Button>
+                            </LoadingButton>
                             <Grid container>
                                 <Grid item xs>
                                     {/*<NavLink href="/sign-up">*/}

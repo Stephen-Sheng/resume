@@ -31,7 +31,7 @@ export default function JobRecommendCard(props) {
                                     {salary}
                                 </Typography>
                             </Grid>
-                            <Grid item xs={2.5} style={{paddingTop:"0px"}}>
+                            <Grid item xs={3} style={{paddingTop:"0px"}}>
                                 <Tag color="#f5f8ff" style={{color: "#606060", fontSize:"13px"}}>{city}</Tag>
                             </Grid>
                             <Grid item xs={3} style={{paddingTop:"0px"}}>
