@@ -20,7 +20,7 @@ export default function PostList(props) {
 
     return(
         <Grid item xs={6} style={{cursor:"pointer"}}>
-            <Card sx={{display: 'flex'}} style={{width: 786, height: 173}} component="span" onClick={handleClickPost}>
+            <Card sx={{display: 'flex'}} style={{width: 646, height: 173}} component="span" onClick={handleClickPost}>
                 <CardMedia
                     component="img"
                     sx={{maxWidth: "165px", maxHeight: "155px"}}

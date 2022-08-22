@@ -16,7 +16,7 @@ const ProgressBar = (props) => {
                 fontWeight: "700",
                 color: "#404040",
                 textAlign: "left",
-                marginLeft: "22em",
+                marginLeft: "17em",
                 marginTop: "2em"
             }}>
                 Application Progress
@@ -39,17 +39,17 @@ const ProgressBar = (props) => {
                         fontWeight: "700",
                         color: "#404040",
                         textAlign: "left",
-                        paddingLeft: "4.2em"
+                        paddingLeft: "3.2em"
                     }}>
                         Company Introduction
                     </Grid>
-                    <Grid item xs={4} style={{textAlign: "right"}}>
+                    <Grid item xs={2}/>
+                    <Grid item xs={3} style={{textAlign: "right"}}>
                         <img alt={logo} src={logo} style={{width: "80px", height: "80px", borderRadius: "6px"}}/>
                     </Grid>
                     <Grid item xs={6} style={{textAlign: "left", fontSize: "14px", alignSelf: "center"}}>
                         {company}
                     </Grid>
-                    <Grid item xs={2}/>
                     <Grid item xs={1.6}/>
                     <Grid item xs={10.4} style={{alignItems: "center", display: "flex"}}>
                         <BusinessCenterIcon fontSize={"small"} style={{marginRight: "15px"}}/>{category}

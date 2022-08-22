@@ -28,9 +28,9 @@ export default function Home() {
         <div style={{backgroundColor: "black"}}>
             <ResponsiveAppBar/>
             <Grid container spacing={{xs: 2, md: 3}} columns={{xs: 4, sm: 8, md: 12}} style={{marginTop: "0.5%"}}>
-                <Grid item xs={2} sm={4} md={4}>
+                <Grid item xs={2} sm={4} md={3}>
                 </Grid>
-                <Grid item xs={2} sm={4} md={4} style={{textAlign: "center"}}>
+                <Grid item xs={2} sm={4} md={6} style={{textAlign: "center"}}>
                     <Typography variant="h4" gutterBottom component="span" style={{fontWeight: 550, color: "white"}}>
                         Recommended by Interviewers
                     </Typography>

@@ -8,14 +8,13 @@ export default function SearchBar({searchContent,handleSearch}) {
 
     return (
         <>
-            <Grid item xs={10}>
+            <Grid item xs={7}>
                 <OrangeBorderTextField
                     {...searchContent.bindToInput}
                     autoFocus
                     margin="dense"
                     id="search"
                     label="Enter article keywords"
-                    fullWidth
                     variant="outlined"
                 />
             </Grid>
@@ -23,7 +22,8 @@ export default function SearchBar({searchContent,handleSearch}) {
                 <Button variant="contained" style={{
                     backgroundColor: "#f64",
                     padding: "10px",
-                    height: "54px"
+                    height: "53px",
+                    marginBottom:"5px"
                 }} onClick={handleSearch}
                 >
                     Search

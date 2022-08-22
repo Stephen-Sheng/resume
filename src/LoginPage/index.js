@@ -84,6 +84,7 @@ export default function SignInSide() {
                 })
                 await navigation.navigate("/")
             } else {
+                setLoading(false)
                 setLoginErr(true);
             }
         } catch (e) {

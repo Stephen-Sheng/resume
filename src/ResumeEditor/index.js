@@ -230,7 +230,7 @@ export default function ResumeEditor({resumeId}) {
                                 }
                             </Paper>
                         </Box>
-                    </Grid> : <Grid item xs={2.5}>
+                    </Grid> : <Grid item xs={3}>
                         <Box
                             sx={{
                                 display: 'flex',

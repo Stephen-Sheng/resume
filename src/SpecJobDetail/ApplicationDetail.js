@@ -26,7 +26,7 @@ const ApplicationDetail = (props) => {
                 fontWeight: "700",
                 color: "#404040",
                 textAlign: "Left",
-                marginLeft: "22em",
+                marginLeft: "17em",
                 marginTop: "2em"
             }}>
                 Application Detail

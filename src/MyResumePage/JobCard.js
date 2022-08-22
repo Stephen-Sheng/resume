@@ -20,7 +20,7 @@ export default function JobCard(props) {
 
     return(
         <Grid item xs={6} style={{cursor:"pointer"}} onClick={handleClickJob}>
-        <Card sx={{display: 'flex'}} style={{width: 331, height: 113}} component="span">
+        <Card sx={{display: 'flex'}} style={{width: 301, height: 113}} component="span">
             <CardMedia
                 component="img"
                 sx={{width: 54, height: 54}}

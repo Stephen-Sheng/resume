@@ -17,7 +17,7 @@ export default function JobRecommendCard(props) {
 
     return(
         <Grid item xs={6} style={{cursor:"pointer"}} onClick={handleClickJob}>
-            <Card sx={{display: 'flex'}} style={{width: 331, height: 113}} component="span">
+            <Card sx={{display: 'flex'}} style={{width: 301, height: 113}} component="span">
                 <Box sx={{display: 'flex', flexDirection: 'column'}}>
                     <CardContent sx={{flex: '1 0 auto'}} style={{maxHeight: '100%', overflow: 'auto'}}>
                         <Grid container spacing={0}>

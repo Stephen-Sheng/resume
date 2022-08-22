@@ -33,7 +33,7 @@ const JobDesc = (props) => {
                 fontWeight: "700",
                 color: "#404040",
                 textAlign: "left",
-                marginLeft: "22em",
+                marginLeft: "17em",
                 marginTop: "2em"
             }}>
                 Job Description
@@ -54,7 +54,7 @@ const JobDesc = (props) => {
                     marginTop: "2em",
                     marginBottom:"2em"
                 }}>Work Address</div>
-                <MapContainer center={[40.043257, 116.273325]} zoom={13} scrollWheelZoom={false} style={{height:"178px",width:"823px"}}>
+                <MapContainer center={[40.043257, 116.273325]} zoom={13} scrollWheelZoom={false} style={{height:"178px",width:"623px"}}>
                     <TileLayer
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
